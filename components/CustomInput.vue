@@ -7,7 +7,7 @@
       v-bind="$attrs"
       class="input__input"
       :vale="value"
-      @input="$emit('input', value)"
+      @input="emitValue"
     />
   </div>
 </template>
@@ -15,7 +15,7 @@
 <script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
-  name: "CustomTextInput",
+  name: "CustomInput",
   inheritAttrs: false,
   props: {
     label: {
@@ -24,14 +24,16 @@ export default Vue.extend({
     },
   },
   data(): {
-    value: string;
+    value: string | number;
   } {
     return {
       value: "",
     };
   },
+  methods: {
+    emitValue(event: InputEvent) {
+      this.$emit("input", (event.target as HTMLInputElement).value);
+    },
+  },
 });
 </script>
-
-<style>
-</style>
