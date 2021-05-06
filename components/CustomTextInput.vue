@@ -1,5 +1,5 @@
 <template>
-  <div class="inpue__container">
+  <div class="input__container">
     <label :for="$attrs.id" class="input__label">
       {{ label }}
     </label>
