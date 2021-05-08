@@ -31,7 +31,7 @@ export default Vue.extend({
     },
     options: {
       type: Array,
-      default: [],
+      default: () => [],
     } as PropOptions<string[]>,
   },
   data(): {
