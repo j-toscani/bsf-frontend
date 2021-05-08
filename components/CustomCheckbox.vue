@@ -41,10 +41,10 @@ export default Vue.extend({
   display: inline-flex;
   align-content: center;
   justify-content: center;
-  background: rgb(250, 250, 250);
-  color: rgb(250, 250, 250);
+  background: white;
+  color: white;
 
-  border: 1px solid var(--color-100, #ccc);
+  border: 1px solid var(--color-100, #ddd);
   height: 1.25em;
   width: 1.25em;
 }
