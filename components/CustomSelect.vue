@@ -27,9 +27,11 @@ export default Vue.extend({
     },
     getDspValue: {
       type: Function,
-      default: (option: any) => {
-        option;
-      },
+      default: (option: any) => option,
+    },
+    label: {
+      type: String,
+      required: true,
     },
     options: {
       type: Array,
@@ -38,7 +40,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      picks: this.value,
+      picks: this.value.length ? this.value : this.options[0],
     };
   },
   watch: {
@@ -51,8 +53,13 @@ export default Vue.extend({
     picks: {
       deep: true,
       handler() {
-        this.$emit("input", this.picks);
+        this.emitPicks();
       },
+    },
+  },
+  methods: {
+    emitPicks() {
+      this.$emit("input", this.picks);
     },
   },
 });
