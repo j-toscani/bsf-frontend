@@ -1,23 +1,14 @@
 
 <template>
-  <div class="select__wrapper">
-    <div class="select__display"></div>
-    <ul class="select__list">
-      <li
-        class="select__list-item"
-        v-for="(option, index) in dspOptions"
-        :key="option.id + '-' + index"
-      >
-        <input
-          :type="type"
-          style="display: none"
-          :name="option.dspName"
-          :id="option.id"
-        />
-        <label :for="option.id"> {{ option.dspValue }} </label>
-        <div class="select__list-item-dspbox"></div>
-      </li>
-    </ul>
+  <div class="checkbox__wrapper">
+    <input
+      class="checkbox__input"
+      style="display: none"
+      v-bind="$attrs"
+      :value="value"
+    />
+    <label class="checkbox__label" :for="$attrs.id"> {{ label }} </label>
+    <div class="checkbox__dspbox"></div>
   </div>
 </template>
 
@@ -26,9 +17,11 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "CustomCheckbox",
+  inheritAttrs: false,
   props: {
     value: {
-      required: true,
+      type: Boolean,
+      default: false,
     },
     label: {
       type: String,
