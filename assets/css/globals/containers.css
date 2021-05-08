@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  gap: var(--gap, 1rem);
+}
+
+.container-outer {
+  padding: 0 var(--padding, 5vw);
+}
+@media (min-width: 549px) {
+  .container-outer {
+    --padding: 15vw;
+  }
+}
+
+.flow-column {
+  flex-direction: column;
+}
+
+.wrap {
+  flex-wrap: wrap;
+}
