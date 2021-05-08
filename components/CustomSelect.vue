@@ -1,7 +1,12 @@
 
 <template>
   <div class="select__wrapper">
-    <label class="select__label" :for="$attrs.id">{{ label }}</label>
+    <label
+      class="select__label"
+      :class="{ required: isRequired }"
+      :for="$attrs.id"
+      >{{ label }}</label
+    >
     <select class="select__input" v-bind="$attrs" v-model="picks">
       <option
         class="select__option"
@@ -57,6 +62,11 @@ export default Vue.extend({
       },
     },
   },
+  computed: {
+    isRequired(): boolean {
+      return this.$attrs.required !== undefined;
+    },
+  },
   methods: {
     emitPicks() {
       this.$emit("input", this.picks);
@@ -66,7 +76,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-label::after {
-  content: ":";
+label.required::after {
+  content: "*";
 }
 </style>
