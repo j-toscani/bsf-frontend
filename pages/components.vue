@@ -4,6 +4,9 @@
     <CustomCheckbox label="Ceckbox 2" id="secondbox" :value="false" />
     <CustomSelect label="Players:" :options="players" />
     <CustomInput type="password" label="Pasword" />
+    <CustomInput type="number" label="Number" />
+    <CustomInput type="date" label="Date" />
+    <CustomInput type="text" label="Text" />
   </div>
 </template>
 
