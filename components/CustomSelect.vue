@@ -65,5 +65,8 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
+label::after {
+  content: ":";
+}
 </style>

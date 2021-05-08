@@ -53,3 +53,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style scoped>
+label::after {
+  content: ":";
+}
+</style>
