@@ -6,14 +6,21 @@
     <input
       v-bind="$attrs"
       class="input__input"
+      :autocomplete="!hasOptions"
       :vale="value"
       @input="emitValue"
     />
+    <datalist v-if="hasOptions" :id="$attrs.list">
+      <option v-for="(option, index) in options" :value="option" :key="index">
+        {{ option }}
+      </option>
+    </datalist>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
+
 export default Vue.extend({
   name: "CustomInput",
   inheritAttrs: false,
@@ -22,6 +29,10 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    options: {
+      type: Array,
+      default: [],
+    } as PropOptions<string[]>,
   },
   data(): {
     value: string | number;
@@ -29,6 +40,11 @@ export default Vue.extend({
     return {
       value: "",
     };
+  },
+  computed: {
+    hasOptions(): boolean {
+      return this.options.length > 0;
+    },
   },
   methods: {
     emitValue(event: InputEvent) {
