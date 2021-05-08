@@ -1,0 +1,30 @@
+/* INPUT RESETS */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  margin: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+select,
+option,
+input {
+  background: transparent;
+  border: 1px solid #ddd;
+
+  padding: 0.5rem 0.25rem;
+  margin: 0;
+
+  line-height: 1;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+option:focus {
+  background: red;
+}
