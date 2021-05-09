@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Login</h1>
-    <nuxt-link to="/tournaments"> Click here to go to Overview Page </nuxt-link>
+    <nuxt-link to="/"> Click here to go to Overview Page </nuxt-link>
   </div>
 </template>
 
