@@ -8,13 +8,13 @@
         v-bind="$attrs"
         class="input__input"
         :autocomplete="!hasOptions"
-        :vale="value"
+        :value="value"
         @input="handleInput"
       />
       <ul
         class="autocomplete__list"
         :class="{ 'hide-list': chosen }"
-        v-if="hasOptions"
+        v-if="hasOptionsToShow"
       >
         <li
           class="autocomplete__list-item"
@@ -40,23 +40,25 @@ export default Vue.extend({
       type: String,
       required: true,
     },
+    value: {
+      type: [String, Number],
+      default: "",
+    },
     options: {
       type: Array,
       default: () => [],
     } as PropOptions<string[]>,
   },
   data(): {
-    value: string | number;
     open: boolean;
   } {
     return {
       open: false,
-      value: "",
     };
   },
   computed: {
-    hasOptions(): boolean {
-      return this.options.length > 0;
+    hasOptionsToShow(): boolean {
+      return this.options.length > 0 && this.filteredOptions.length > 0;
     },
     chosen(): boolean {
       return this.options.findIndex((value) => value === this.value) !== -1;
@@ -72,18 +74,10 @@ export default Vue.extend({
   },
   methods: {
     handleOptionClick(option: string | number) {
-      this.setValue(option);
       this.emitValue(option);
-    },
-    setValue(value: string | number) {
-      this.value = value;
-    },
-    clearValue() {
-      this.value = typeof this.value === "string" ? "" : 0;
     },
     handleInput(event: InputEvent) {
       const value = (event.target as HTMLInputElement).value;
-      this.setValue(value);
       this.emitValue(value);
     },
     emitValue(value: string | number) {
@@ -94,6 +88,11 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.input__label {
+  margin-bottom: 0.5em;
+  display: inline-block;
+}
+
 .autocomplete__wrapper {
   position: relative;
   width: fit-content;
