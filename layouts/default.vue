@@ -1,10 +1,24 @@
 <template>
   <div class="layout__app-wrapper">
-    <header></header>
+    <header class="container container-outer">
+      <CustomButton @click="$router.go(-1)"> Go Back </CustomButton>
+    </header>
     <Nuxt class="layout__container container container-outer" />
     <footer></footer>
   </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import CustomButton from "@/components/CustomButton.vue";
+
+export default Vue.extend({
+  name: "default",
+  components: {
+    CustomButton,
+  },
+});
+</script>
 
 <style scoped>
 footer {
@@ -13,8 +27,11 @@ footer {
 }
 
 header {
-  height: 7.5rem;
+  height: var(--height, 3rem);
   width: 100%;
+
+  display: flex;
+  align-items: center;
 }
 
 .layout__app-wrapper {
@@ -23,6 +40,6 @@ header {
 }
 
 .layout__container {
-  min-height: calc(100vh - 17.5rem);
+  min-height: calc(100vh - 15rem);
 }
 </style>
