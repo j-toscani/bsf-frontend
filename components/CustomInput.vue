@@ -3,18 +3,24 @@
     <label :for="$attrs.id" class="input__label">
       {{ label }}
     </label>
-    <input
-      v-bind="$attrs"
-      class="input__input"
-      :autocomplete="!hasOptions"
-      :vale="value"
-      @input="emitValue"
-    />
-    <datalist v-if="hasOptions" :id="$attrs.list">
-      <option v-for="(option, index) in options" :value="option" :key="index">
-        {{ option }}
-      </option>
-    </datalist>
+    <div class="autocomplete__wrapper">
+      <input
+        v-bind="$attrs"
+        class="input__input"
+        :autocomplete="!hasOptions"
+        :vale="value"
+        @input="emitValue"
+      />
+      <ul class="autocomplete__list" v-if="hasOptions">
+        <li
+          class="autocomplete__list-item"
+          v-for="(option, index) in filteredOptions"
+          :key="index"
+        >
+          {{ option }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -45,16 +51,65 @@ export default Vue.extend({
     hasOptions(): boolean {
       return this.options.length > 0;
     },
+    filteredOptions(): string[] {
+      if (typeof this.value === "number") {
+        return this.options;
+      }
+      return this.options.filter((option) =>
+        option.includes(this.value as string)
+      );
+    },
   },
   methods: {
     emitValue(event: InputEvent) {
-      this.$emit("input", (event.target as HTMLInputElement).value);
+      const value = (event.target as HTMLInputElement).value;
+      this.value = value;
+      this.$emit("input", value);
     },
   },
 });
 </script>
 
 <style scoped>
+.autocomplete__wrapper {
+  position: relative;
+  width: fit-content;
+}
+
+.autocomplete__list {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: calc(100% - 1px);
+
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  flex-direction: column;
+
+  background: white;
+  gap: 0.5rem;
+
+  padding: 0.5rem 0.5rem;
+  z-index: 1;
+  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.autocomplete__list-item {
+  padding: 0.25rem;
+  cursor: pointer;
+}
+.autocomplete__list-item:hover {
+  background: var(--color-200);
+  color: white;
+}
+
+.input__container:focus-within .autocomplete__list,
+.autocomplete__list:hover {
+  pointer-events: all;
+  opacity: 1;
+}
+
 input:required ~ label::after {
   content: "*";
 }
