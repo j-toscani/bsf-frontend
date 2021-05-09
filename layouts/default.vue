@@ -1,7 +1,7 @@
 <template>
   <div class="layout__app-wrapper">
     <header class="container container-outer">
-      <CustomButton @click="$router.go(-1)"> Go Back </CustomButton>
+      <nuxt-link to="/"> Home </nuxt-link>
     </header>
     <Nuxt class="layout__container container container-outer" />
     <footer></footer>
