@@ -44,6 +44,6 @@ button:disabled {
 
 .tertiary {
   background: var(--color-300);
-  color: var(--color-200);
+  color: white;
 }
 </style>
