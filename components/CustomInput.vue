@@ -9,11 +9,16 @@
         class="input__input"
         :autocomplete="!hasOptions"
         :vale="value"
-        @input="emitValue"
+        @input="handleInput"
       />
-      <ul class="autocomplete__list" v-if="hasOptions">
+      <ul
+        class="autocomplete__list"
+        :class="{ 'hide-list': chosen }"
+        v-if="hasOptions"
+      >
         <li
           class="autocomplete__list-item"
+          @click="handleOptionClick(option)"
           v-for="(option, index) in filteredOptions"
           :key="index"
         >
@@ -42,14 +47,19 @@ export default Vue.extend({
   },
   data(): {
     value: string | number;
+    open: boolean;
   } {
     return {
+      open: false,
       value: "",
     };
   },
   computed: {
     hasOptions(): boolean {
       return this.options.length > 0;
+    },
+    chosen(): boolean {
+      return this.options.findIndex((value) => value === this.value) !== -1;
     },
     filteredOptions(): string[] {
       if (typeof this.value === "number") {
@@ -61,9 +71,22 @@ export default Vue.extend({
     },
   },
   methods: {
-    emitValue(event: InputEvent) {
-      const value = (event.target as HTMLInputElement).value;
+    handleOptionClick(option: string | number) {
+      this.setValue(option);
+      this.emitValue(option);
+    },
+    setValue(value: string | number) {
       this.value = value;
+    },
+    clearValue() {
+      this.value = typeof this.value === "string" ? "" : 0;
+    },
+    handleInput(event: InputEvent) {
+      const value = (event.target as HTMLInputElement).value;
+      this.setValue(value);
+      this.emitValue(value);
+    },
+    emitValue(value: string | number) {
       this.$emit("input", value);
     },
   },
@@ -93,6 +116,10 @@ export default Vue.extend({
   padding: 0.5rem 0.5rem;
   z-index: 1;
   box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.hide-list {
+  transform: scaleY(0);
 }
 
 .autocomplete__list-item {
