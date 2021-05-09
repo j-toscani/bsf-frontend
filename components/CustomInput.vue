@@ -7,15 +7,11 @@
       <input
         v-bind="$attrs"
         class="input__input"
-        :autocomplete="!hasOptions"
+        autocomplete="off"
         :value="value"
         @input="handleInput"
       />
-      <ul
-        class="autocomplete__list"
-        :class="{ 'hide-list': chosen }"
-        v-if="hasOptionsToShow"
-      >
+      <ul class="autocomplete__list" v-if="autocompleteOpen">
         <li
           class="autocomplete__list-item"
           @click="handleOptionClick(option)"
@@ -50,15 +46,19 @@ export default Vue.extend({
     } as PropOptions<string[]>,
   },
   data(): {
-    open: boolean;
+    autocompleteShouldShow: boolean;
   } {
     return {
-      open: false,
+      autocompleteShouldShow: false,
     };
   },
   computed: {
-    hasOptionsToShow(): boolean {
-      return this.options.length > 0 && this.filteredOptions.length > 0;
+    autocompleteOpen(): boolean {
+      return (
+        this.options.length > 0 &&
+        this.filteredOptions.length > 0 &&
+        this.autocompleteShouldShow
+      );
     },
     chosen(): boolean {
       return this.options.findIndex((value) => value === this.value) !== -1;
@@ -73,16 +73,28 @@ export default Vue.extend({
     },
   },
   methods: {
+    closeList() {
+      this.autocompleteShouldShow = false;
+    },
+    openList() {
+      this.autocompleteShouldShow = true;
+    },
     handleOptionClick(option: string | number) {
       this.emitValue(option);
+      this.closeList();
     },
     handleInput(event: InputEvent) {
+      this.openList();
+      console.log(this.autocompleteShouldShow);
       const value = (event.target as HTMLInputElement).value;
       this.emitValue(value);
     },
     emitValue(value: string | number) {
       this.$emit("input", value);
     },
+  },
+  mounted() {
+    document.addEventListener("click", () => this.closeList());
   },
 });
 </script>
@@ -105,8 +117,6 @@ export default Vue.extend({
   min-width: calc(100% - 1px);
 
   display: flex;
-  opacity: 0;
-  pointer-events: none;
   flex-direction: column;
 
   background: white;
@@ -117,10 +127,6 @@ export default Vue.extend({
   box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
-.hide-list {
-  transform: scaleY(0);
-}
-
 .autocomplete__list-item {
   padding: 0.25rem;
   cursor: pointer;
@@ -128,12 +134,6 @@ export default Vue.extend({
 .autocomplete__list-item:hover {
   background: var(--color-200);
   color: white;
-}
-
-.input__container:focus-within .autocomplete__list,
-.autocomplete__list:hover {
-  pointer-events: all;
-  opacity: 1;
 }
 
 input:required ~ label::after {
