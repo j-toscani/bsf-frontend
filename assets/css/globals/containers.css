@@ -1,6 +1,13 @@
 .container {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: var(--gap, 1rem);
+
+  width: 100%;
+}
+
+.item {
+  grid-column: span var(--width, 12);
 }
 
 .container-outer {
@@ -10,12 +17,4 @@
   .container-outer {
     --padding: 15vw;
   }
-}
-
-.flow-column {
-  flex-direction: column;
-}
-
-.wrap {
-  flex-wrap: wrap;
 }
