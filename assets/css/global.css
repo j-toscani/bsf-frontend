@@ -1,26 +1,65 @@
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+@import "./globals/fonts.css";
+@import "./globals/input-resets.css";
+@import "./globals/containers.css";
+@import "./globals/colors.css";
+
+html {
+  font-family: Roboto-Slab;
+  font-size: clamp(14px, 2.5vw 20px);
+
+  box-sizing: border-box;
+  color: var(--color-font);
 }
 
-.components-container {
-  flex-flow: column;
-  gap: 3rem;
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  color: inherit;
 }
 
-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+small {
+  font-weight: normal;
+  font-size: calc(1rem * var(--size, 1));
+  margin: 1em 0 0.5em;
+}
+
+h1 {
+  --size: 2.448;
+}
+h2 {
+  --size: 2.074;
+}
+h3 {
+  --size: 1.728;
+}
+h4 {
+  --size: 1.44;
+}
+h5 {
+  --size: 1.2;
+}
+
+.small {
+  --size: 0.75;
   margin: 0;
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+body {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+}
+
+li {
   margin: 0;
 }

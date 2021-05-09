@@ -55,7 +55,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-label::after {
-  content: ":";
+input:required ~ label::after {
+  content: "*";
 }
 </style>
