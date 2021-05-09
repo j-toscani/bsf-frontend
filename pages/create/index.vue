@@ -13,7 +13,9 @@
           list="available"
           :options="remainingPicks"
         />
-        <button @click="handleAddButtonClick">Add</button>
+        <button :disabled="!pickExists" @click="handleAddButtonClick">
+          Add
+        </button>
       </li>
     </ul>
 
@@ -59,6 +61,9 @@ export default Vue.extend({
   computed: {
     remainingPicks(): string[] {
       return this.options.filter((option) => !this.roster.includes(option));
+    },
+    pickExists(): boolean {
+      return this.options.findIndex((option) => this.pick === option) !== -1;
     },
     valid(): boolean {
       return this.roster.length > 3;
