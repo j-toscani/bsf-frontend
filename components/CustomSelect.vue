@@ -27,7 +27,7 @@ export default Vue.extend({
   name: "CustomSelect",
   props: {
     value: {
-      type: Array,
+      type: [Array, Number, String],
       default: () => [],
     },
     getDspValue: {
@@ -45,7 +45,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      picks: this.value.length ? this.value : this.options[0],
+      picks: this.value ? this.value : this.options[0],
     };
   },
   watch: {
