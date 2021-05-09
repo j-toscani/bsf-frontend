@@ -5,34 +5,25 @@
         <h3>Create new Tournament</h3>
       </nuxt-link>
     </div>
-    <div>
-      <h2>Edit your Running Tournaments</h2>
-      <ul class="tournaments__list container">
-        <li>No Tournaments available</li>
-      </ul>
-    </div>
-
-    <div>
-      <h2>Past Tournament Results</h2>
-      <ul class="tournaments__list container">
-        <li
-          class="tournaments__list-item item"
-          v-for="(tournament, index) in finishedTournaments"
-          :key="index"
-        >
-          <nuxt-link :to="'/' + tournament.id">
-            {{ tournament.name }}
-          </nuxt-link>
-        </li>
-      </ul>
-    </div>
+    <TournamentList> My running Tournaments </TournamentList>
+    <TournamentList :tournaments="runningTournaments">
+      Running Tournaments
+    </TournamentList>
+    <TournamentList :tournaments="finishedTournaments">
+      Past Tournaments
+    </TournamentList>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
+import TournamentList from "@/components/TournamentList.vue";
+
 export default Vue.extend({
+  components: {
+    TournamentList,
+  },
   data() {
     return {
       tournaments: [
