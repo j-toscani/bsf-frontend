@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2><slot /></h2>
-    <ul class="tournaments__list">
+    <ul class="tournaments__list" v-if="tournaments.length">
       <li
         class="tournaments__list-item item"
         v-for="(tournament, index) in tournaments"
@@ -10,6 +10,11 @@
         <nuxt-link :to="baseUrl + tournament.id">
           {{ tournament.name }}
         </nuxt-link>
+      </li>
+    </ul>
+    <ul class="tournaments__list" v-else>
+      <li class="tournaments__list-item empty">
+        No Tournaments for this Category
       </li>
     </ul>
   </div>
