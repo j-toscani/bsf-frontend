@@ -1,7 +1,7 @@
 <template>
   <div class="layout__app-wrapper">
     <header></header>
-    <Nuxt class="layout__container" />
+    <Nuxt class="layout__container container container-outer" />
     <footer></footer>
   </div>
 </template>
