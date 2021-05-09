@@ -1,42 +1,54 @@
 <template>
   <main>
     <h2>This is the Contestants page.</h2>
-    <ul>
-      <li v-for="(contestant, index) in roster" :key="index">
+    <ul class="contestantslist__list">
+      <li class="contestantslist__list-item">
+        <form class="contestantslist__add-contestant" id="addContestant">
+          <CustomInput
+            label="Add Contestant"
+            id="pick"
+            v-model="pick"
+            list="available"
+            :options="remainingPicks"
+          />
+          <CustomButton
+            :disabled="!pickExists"
+            @submit.prevent="handleAddButtonClick"
+            type="tertiary"
+            form="addContestant"
+            class="contestantslist__add-contestant-button"
+          >
+            +
+          </CustomButton>
+        </form>
+      </li>
+      <li
+        class="contestantslist__list-item"
+        v-for="(contestant, index) in roster"
+        :key="index"
+      >
         {{ contestant }}
       </li>
-      <li>
-        <CustomInput
-          label="Add Contestant"
-          id="pick"
-          v-model="pick"
-          list="available"
-          :options="remainingPicks"
-        />
-        <button :disabled="!pickExists" @click="handleAddButtonClick">
-          Add
-        </button>
-      </li>
     </ul>
-
-    <form class="form__add-contestants"></form>
-    <div>
+    <nav class="">
       <nuxt-link class="form__next-link" to="/create/teams" v-if="valid">
         Next
       </nuxt-link>
-      <span class="form__next-link disabled" else> Next </span>
-    </div>
+      <span class="form__next-link disabled" v-else> Next </span>
+    </nav>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import CustomInput from "@/components/CustomInput.vue";
+import CustomButton from "@/components/CustomButton.vue";
 
 export default Vue.extend({
   name: "Contestants",
   components: {
     CustomInput,
+    CustomButton,
   },
   data(): {
     pick: string;
@@ -83,7 +95,26 @@ export default Vue.extend({
   border-radius: 0.25rem;
 }
 
+button:disabled,
 .disabled {
   opacity: 0.75;
+}
+
+.contestantslist__add-contestant {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.25rem 0 2rem;
+}
+
+.contestantslist__add-contestant-button {
+  font-size: 1rem;
+}
+
+.contestantslist__list {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+  margin: 2rem 0;
 }
 </style>
