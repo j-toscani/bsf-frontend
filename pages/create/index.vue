@@ -111,7 +111,7 @@ export default Vue.extend({
 
 button:disabled,
 .disabled {
-  opacity: 0.75;
+  opacity: 0.5;
 }
 
 .contestantslist__add-contestant {
