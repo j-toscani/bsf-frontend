@@ -52,6 +52,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Contestant } from "@/types/types";
+import { mapGetters } from "vuex";
+
 import CustomInput from "@/components/CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
 
@@ -62,37 +65,37 @@ export default Vue.extend({
     CustomButton,
   },
   data(): {
-    pick: string;
-    roster: string[];
-    options: string[];
+    pick: Contestant;
   } {
     return {
       pick: "",
-      roster: [],
-      options: ["Mike", "Flo", "Armin", "Julian P.", "Julian T."],
     };
   },
   methods: {
     addToRoster() {
-      this.roster.push(this.pick);
-    },
-    handleAddButtonClick() {
-      this.addToRoster();
+      this.$store.dispatch("create/addToRoster", this.pick);
       this.pick = "";
     },
-    handleDeleteClick(index: number) {
-      this.roster.splice(index, 1);
+    deleteFromRoster(index: number) {
+      this.$store.dispatch("create/deleteFromRoster", index);
     },
   },
   computed: {
-    remainingPicks(): string[] {
-      return this.options.filter((option) => !this.roster.includes(option));
+    ...mapGetters({
+      valid: "create/hasMinAmmountOfContestants",
+    }),
+    remainingPicks(): Contestant[] {
+      return this.$store.state.create.options.filter(
+        (option: Contestant) =>
+          !this.$store.state.create.roster.includes(option)
+      );
     },
     pickExists(): boolean {
-      return this.options.findIndex((option) => this.pick === option) !== -1;
-    },
-    valid(): boolean {
-      return this.roster.length > 3;
+      return (
+        this.$store.state.create.options.findIndex(
+          (option: Contestant) => this.pick === option
+        ) !== -1
+      );
     },
   },
 });
