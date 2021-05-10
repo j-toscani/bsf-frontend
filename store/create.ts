@@ -3,8 +3,14 @@ import { RootState } from "~/store";
 
 import { Contestant } from "@/types/types";
 
+type TeamSize = 1 | 2 | 3 | 4;
+
 export const state = () => ({
   roster: [] as Contestant[],
+
+  teams: [] as Contestant[][],
+  teamSize: 1 as TeamSize,
+
   availableContestants: ["Mike", "Flo", "Armin", "Julian P.", "Julian T."]
 });
 
