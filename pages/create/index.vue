@@ -1,33 +1,44 @@
 <template>
   <main>
     <h2>This is the Contestants page.</h2>
+
+    <form
+      class="contestantslist__add-contestant"
+      @submit.prevent="handleAddButtonClick"
+      id="addContestant"
+    >
+      <CustomInput
+        label="Add Contestant"
+        id="pick"
+        v-model="pick"
+        list="available"
+        :options="remainingPicks"
+      />
+      <CustomButton
+        :disabled="!pickExists"
+        level="tertiary"
+        form="addContestant"
+        class="contestantslist__add-contestant-button"
+      >
+        +
+      </CustomButton>
+    </form>
+
     <ul class="contestantslist__list">
-      <li class="contestantslist__list-item">
-        <form class="contestantslist__add-contestant" id="addContestant">
-          <CustomInput
-            label="Add Contestant"
-            id="pick"
-            v-model="pick"
-            list="available"
-            :options="remainingPicks"
-          />
-          <CustomButton
-            :disabled="!pickExists"
-            @submit.prevent="handleAddButtonClick"
-            type="tertiary"
-            form="addContestant"
-            class="contestantslist__add-contestant-button"
-          >
-            +
-          </CustomButton>
-        </form>
-      </li>
       <li
         class="contestantslist__list-item"
         v-for="(contestant, index) in roster"
         :key="index"
       >
-        {{ contestant }}
+        <CustomButton
+          @click="handleDeleteClick(index)"
+          level="secondary"
+          size="small"
+          style="margin-right: 0.5rem"
+        >
+          ✖</CustomButton
+        >
+        <span>{{ contestant }} </span>
       </li>
     </ul>
     <nav class="">
@@ -68,6 +79,9 @@ export default Vue.extend({
     handleAddButtonClick() {
       this.addToRoster();
       this.pick = "";
+    },
+    handleDeleteClick(index: number) {
+      this.roster.splice(index, 1);
     },
   },
   computed: {
