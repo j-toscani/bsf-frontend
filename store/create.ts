@@ -7,6 +7,7 @@ import { Contestant, TeamSize, TeamSizeValue, Team } from "@/types/types";
 export const state = () => ({
   roster: [] as Contestant[],
 
+  allowEmptySlots: false as boolean,
   teams: [] as Team[],
   teamOptions: TEAM_OPTIONS,
 
@@ -20,20 +21,29 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
   hasMinAmmountOfContestants(state) {
     return state.roster.length > 3;
   },
-  maxNumberOfTeams(state) {
-    return Math.ceil(state.roster.length / state.teamSize);
+  numberOfTeams(state) {
+    const max = Math.ceil(state.roster.length / state.teamSize);
+    const min = Math.floor(state.roster.length / state.teamSize);
+    return state.allowEmptySlots ? max : min;
+  },
+  overflowingContestants(state) {
+    const contestants = state.teams.map(team =>
+      team.contestants.slice(state.teamSize)
+    );
+    return contestants.flat();
   },
   allTeamsAreFilled(state) {
     const contestantInTeams = state.teams.map(
       team => team?.contestants?.length
     );
     return contestantInTeams.length > 0
-      ? contestantInTeams.every(element => element === state.teamSize)
+      ? contestantInTeams.every(element => element >= state.teamSize)
       : false;
   }
 };
 
 export const mutations: MutationTree<CreateTournamentState> = {
+  SET_EMPTY_OPEN_SLOTS: (state, val) => (state.allowEmptySlots = val),
   ADD_TO_ROSTER: (state, contestant: Contestant) =>
     state.roster.push(contestant),
   REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1),
@@ -65,8 +75,13 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     );
   },
   addToTeamByIndex({ dispatch, getters }, { contestant, index }) {
-    const teamIndex = index % getters.maxNumberOfTeams;
+    const teamIndex = index % getters.numberOfTeams;
     dispatch("addToTeam", { teamIndex, contestant });
+  },
+  toggleTeamCount({ commit, dispatch, state }) {
+    commit("SET_EMPTY_OPEN_SLOTS", !state.allowEmptySlots);
+    dispatch("setEmptyTeams");
+    dispatch("handleTeamChange");
   },
   addToTeam({ commit }, data: { teamIndex: number; contestant: Contestant }) {
     commit("ADD_TO_TEAM", data);
@@ -74,7 +89,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
   setEmptyTeams({ commit, getters, state }) {
     const teams: Team[] = [];
 
-    for (let index = 0; index < getters.maxNumberOfTeams; index++) {
+    for (let index = 0; index < getters.numberOfTeams; index++) {
       teams.push({
         name: state.teams[index]?.name
           ? state.teams[index]?.name
