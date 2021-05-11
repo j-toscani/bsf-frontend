@@ -65,7 +65,7 @@ export default Vue.extend({
     CustomButton,
   },
   data(): {
-    pick: Contestant;
+    pick: string;
   } {
     return {
       pick: "",
