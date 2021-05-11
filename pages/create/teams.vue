@@ -1,6 +1,7 @@
 <template>
   <section>
     <h2>This is the Teams Page.</h2>
+    <button @click="handleTeamCountButtonClick">Toggle Teamcount</button>
     <CustomSelect
       label="Team Size"
       :options="teamOptions"
@@ -10,7 +11,7 @@
     <ol>
       <li v-for="(team, tIndex) in teams" :key="'team' + tIndex">
         <h4>{{ team.name }}</h4>
-        <ul class="has-list-style">
+        <ul class="has-list-style" style="padding: 0">
           <li
             v-for="(slot, cIndex) in slotsInTeams"
             :key="'team' + tIndex + 'contestant' + cIndex"
@@ -20,6 +21,16 @@
         </ul>
       </li>
     </ol>
+    <span v-if="!allTeamsAreFilled"> You have teams with empty slots. </span>
+    <span v-if="numberOfTeams <= 1"> Not enough Teams for a Tournament. </span>
+    <div v-if="overflowingContestants.length">
+      <span> You are missing free slots for these Users: </span>
+      <ul class="has-list-style">
+        <li v-for="(user, index) in overflowingContestants" :key="index">
+          {{ user }}
+        </li>
+      </ul>
+    </div>
   </section>
 </template>
 
@@ -47,7 +58,9 @@ export default Vue.extend({
   },
   computed: {
     ...mapGetters({
-      maxNumberOfTeams: "create/maxNumberOfTeams",
+      allTeamsAreFilled: "create/allTeamsAreFilled",
+      numberOfTeams: "create/numberOfTeams",
+      overflowingContestants: "create/overflowingContestants",
     }),
     teams(): Team[] {
       return this.$store.state.create.teams;
@@ -60,6 +73,9 @@ export default Vue.extend({
   methods: {
     getTeamTypeName(data: { name: string; value: number }) {
       return data.name;
+    },
+    handleTeamCountButtonClick() {
+      this.$store.dispatch("create/toggleTeamCount");
     },
   },
 });
