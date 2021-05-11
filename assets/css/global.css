@@ -60,12 +60,9 @@ button {
   cursor: pointer;
 }
 
-ul {
+ul:not(.has-list-style) {
   margin: 0;
   padding: 0;
-}
-
-ul:not(.has-list-style) {
   list-style: none;
 }
 
