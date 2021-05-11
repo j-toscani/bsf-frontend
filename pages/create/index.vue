@@ -4,7 +4,7 @@
 
     <form
       class="contestantslist__add-contestant"
-      @submit.prevent="handleAddButtonClick"
+      @submit.prevent="addToRoster"
       id="addContestant"
     >
       <CustomInput
@@ -27,11 +27,11 @@
     <ul class="contestantslist__list">
       <li
         class="contestantslist__list-item"
-        v-for="(contestant, index) in roster"
+        v-for="(contestant, index) in dspRoster"
         :key="index"
       >
         <CustomButton
-          @click="handleDeleteClick(index)"
+          @click="deleteFromRoster(index)"
           level="secondary"
           size="small"
           style="margin-right: 0.5rem"
@@ -84,15 +84,17 @@ export default Vue.extend({
     ...mapGetters({
       valid: "create/hasMinAmmountOfContestants",
     }),
+    dspRoster(): Contestant[] {
+      return this.$store.state.create.roster;
+    },
     remainingPicks(): Contestant[] {
-      return this.$store.state.create.options.filter(
-        (option: Contestant) =>
-          !this.$store.state.create.roster.includes(option)
+      return this.$store.state.create.availableContestants.filter(
+        (option: Contestant) => !this.dspRoster.includes(option)
       );
     },
     pickExists(): boolean {
       return (
-        this.$store.state.create.options.findIndex(
+        this.$store.state.create.availableContestants.findIndex(
           (option: Contestant) => this.pick === option
         ) !== -1
       );
