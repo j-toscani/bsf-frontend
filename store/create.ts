@@ -22,6 +22,14 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
   },
   maxNumberOfTeams(state) {
     return Math.ceil(state.roster.length / state.teamSize);
+  },
+  allTeamsAreFilled(state) {
+    const contestantInTeams = state.teams.map(
+      team => team?.contestants?.length
+    );
+    return contestantInTeams.length > 0
+      ? contestantInTeams.every(element => element === state.teamSize)
+      : false;
   }
 };
 
