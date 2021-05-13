@@ -43,7 +43,7 @@ export default Vue.extend({
 <style scoped>
 .input__label {
   margin-bottom: 0.5em;
-  display: inline-block;
+  display: block;
 }
 
 input:required ~ label::after {
