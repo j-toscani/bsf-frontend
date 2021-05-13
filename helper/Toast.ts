@@ -1,3 +1,4 @@
+// @ts-ignore
 import Toast from "@/components/Toast.vue";
 import Vue from "vue";
 
