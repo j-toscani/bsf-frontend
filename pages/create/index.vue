@@ -26,7 +26,7 @@
       id="addContestant"
     >
       <CustomInputWithAutocomplete
-        label="Add Contestant from Databse"
+        label="Add Contestant from Database"
         id="pick"
         type="text"
         v-model="pick"
@@ -99,7 +99,7 @@ export default Vue.extend({
       this.pick = "";
     },
     createNewContestant() {
-      this.$toast.add(this.newContestant);
+      this.$toast.add(`${this.newContestant} was added.`);
       this.$store.dispatch("create/addToContestants", this.newContestant);
       this.newContestant = "";
     },
