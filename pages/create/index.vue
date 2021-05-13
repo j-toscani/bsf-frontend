@@ -1,17 +1,35 @@
 <template>
   <main>
-    <h2>This is the Contestants page.</h2>
-
+    <h2 class="page-title">This is the Contestants page.</h2>
+    <form
+      id="createNewContestant"
+      class="contestantslist__add-contestant"
+      @submit.prevent="createNewContestant"
+    >
+      <CustomInput
+        label="Create new Contestant"
+        v-model="newContestant"
+        id="newContestant"
+      />
+      <CustomButton
+        level="tertiary"
+        type="submit"
+        form="createNewContestant"
+        class="contestantslist__add-contestant-button"
+      >
+        CREATE
+      </CustomButton>
+    </form>
     <form
       class="contestantslist__add-contestant"
       @submit.prevent="addToRoster"
       id="addContestant"
     >
       <CustomInputWithAutocomplete
-        label="Add Contestant"
+        label="Add Contestant from Databse"
         id="pick"
+        type="text"
         v-model="pick"
-        list="available"
         :options="remainingPicks"
       />
       <CustomButton
@@ -20,7 +38,7 @@
         form="addContestant"
         class="contestantslist__add-contestant-button"
       >
-        +
+        ADD
       </CustomButton>
     </form>
 
@@ -56,6 +74,7 @@ import { Contestant } from "@/types/types";
 import { mapGetters } from "vuex";
 
 import CustomInputWithAutocomplete from "@/components/CustomInputWithAutocomplete.vue";
+import CustomInput from "@/components/CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
 
 export default Vue.extend({
@@ -63,18 +82,26 @@ export default Vue.extend({
   components: {
     CustomInputWithAutocomplete,
     CustomButton,
+    CustomInput,
   },
   data(): {
     pick: string;
+    newContestant: string;
   } {
     return {
       pick: "",
+      newContestant: "",
     };
   },
   methods: {
     addToRoster() {
       this.$store.dispatch("create/addToRoster", this.pick);
       this.pick = "";
+    },
+    createNewContestant() {
+      this.$toast.add(this.newContestant);
+      this.$store.dispatch("create/addToContestants", this.newContestant);
+      this.newContestant = "";
     },
     deleteFromRoster(index: number) {
       this.$store.dispatch("create/deleteFromRoster", index);
@@ -116,20 +143,18 @@ button:disabled,
 }
 
 .contestantslist__add-contestant {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   margin: 1.25rem 0 2rem;
 }
 
 .contestantslist__add-contestant-button {
   font-size: 1rem;
+  margin-top: 1rem;
 }
 
 .contestantslist__list {
   display: flex;
   flex-flow: column;
   gap: 1rem;
-  margin: 2rem 0;
+  margin: 1rem 0;
 }
 </style>
