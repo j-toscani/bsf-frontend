@@ -14,8 +14,9 @@ const toast = {
     const nextId = toast.ids.length + 1;
     toast.ids.push(nextId);
 
-    const element = toast.createToast({ message, id: nextId, timeout });
-    toast.activateToast(element);
+    const instance = toast.createToast({ message, id: nextId, timeout });
+    toast.activateToast(instance.$el);
+    return nextId;
   },
   remove: (id: number) => {
     const toastMessage = document.querySelector(`[data-toast-id="${id}"]`);
@@ -28,7 +29,7 @@ const toast = {
       propsData: props
     });
     instance.$mount();
-    return instance.$el;
+    return instance;
   },
   activateToast: (element: Element) => {
     document.querySelector("body")?.appendChild(element);
