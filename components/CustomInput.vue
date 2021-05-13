@@ -3,30 +3,17 @@
     <label :for="$attrs.id" class="input__label">
       {{ label }}
     </label>
-    <div class="autocomplete__wrapper">
-      <input
-        v-bind="$attrs"
-        class="input__input"
-        autocomplete="off"
-        :value="value"
-        @input="handleInput"
-      />
-      <ul class="autocomplete__list" v-if="autocompleteOpen">
-        <li
-          class="autocomplete__list-item"
-          @click="handleOptionClick(option)"
-          v-for="(option, index) in filteredOptions"
-          :key="index"
-        >
-          {{ option }}
-        </li>
-      </ul>
-    </div>
+    <input
+      v-bind="$attrs"
+      class="input__input"
+      :value="value"
+      @input="handleInput"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
 
 export default Vue.extend({
   name: "CustomInput",
@@ -40,61 +27,15 @@ export default Vue.extend({
       type: [String, Number],
       default: "",
     },
-    options: {
-      type: Array,
-      default: () => [],
-    } as PropOptions<string[]>,
-  },
-  data(): {
-    autocompleteShouldShow: boolean;
-  } {
-    return {
-      autocompleteShouldShow: false,
-    };
-  },
-  computed: {
-    autocompleteOpen(): boolean {
-      return (
-        this.options.length > 0 &&
-        this.filteredOptions.length > 0 &&
-        this.autocompleteShouldShow
-      );
-    },
-    chosen(): boolean {
-      return this.options.findIndex((value) => value === this.value) !== -1;
-    },
-    filteredOptions(): string[] {
-      if (typeof this.value === "number") {
-        return this.options;
-      }
-      return this.options.filter((option) =>
-        option.includes(this.value as string)
-      );
-    },
   },
   methods: {
-    closeList() {
-      this.autocompleteShouldShow = false;
-    },
-    openList() {
-      this.autocompleteShouldShow = true;
-    },
-    handleOptionClick(option: string | number) {
-      this.emitValue(option);
-      this.closeList();
-    },
     handleInput(event: InputEvent) {
-      this.openList();
-      console.log(this.autocompleteShouldShow);
       const value = (event.target as HTMLInputElement).value;
       this.emitValue(value);
     },
     emitValue(value: string | number) {
       this.$emit("input", value);
     },
-  },
-  mounted() {
-    document.addEventListener("click", () => this.closeList());
   },
 });
 </script>
@@ -103,37 +44,6 @@ export default Vue.extend({
 .input__label {
   margin-bottom: 0.5em;
   display: inline-block;
-}
-
-.autocomplete__wrapper {
-  position: relative;
-  width: fit-content;
-}
-
-.autocomplete__list {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  min-width: calc(100% - 1px);
-
-  display: flex;
-  flex-direction: column;
-
-  background: white;
-  gap: 0.5rem;
-
-  padding: 0.5rem 0.5rem;
-  z-index: 1;
-  box-shadow: 0 2px 2px 0px rgba(0, 0, 0, 0.3);
-}
-
-.autocomplete__list-item {
-  padding: 0.25rem;
-  cursor: pointer;
-}
-.autocomplete__list-item:hover {
-  background: var(--color-200);
-  color: white;
 }
 
 input:required ~ label::after {
