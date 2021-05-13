@@ -2,6 +2,7 @@
 @import "./globals/input-resets.css";
 @import "./globals/containers.css";
 @import "./globals/colors.css";
+@import "./globals/transitions.css";
 
 html {
   font-family: Roboto-Slab;
@@ -28,7 +29,7 @@ h6,
 small {
   font-weight: normal;
   font-size: calc(1rem * var(--size, 1));
-  margin: 1em 0 0.5em;
+  margin: 1em 0 0.75em;
 }
 
 h1 {
@@ -56,10 +57,14 @@ body {
   margin: 0;
 }
 
-ul {
-  list-style: none;
+button {
+  cursor: pointer;
+}
+
+ul:not(.has-list-style) {
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 li {

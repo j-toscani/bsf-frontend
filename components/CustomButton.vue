@@ -1,12 +1,16 @@
 <template>
-  <button :class="type" @click="handleClick"><slot /></button>
+  <button :class="[level, size]" @click="handleClick"><slot /></button>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 export default Vue.extend({
   props: {
-    type: {
+    size: {
+      type: String,
+      default: "medium",
+    } as PropOptions<"small" | "medium" | "big">,
+    level: {
       type: String,
       default: "primary",
     } as PropOptions<"primary" | "secondary" | "tertiary">,
@@ -21,10 +25,20 @@ export default Vue.extend({
 
 <style scoped>
 button {
-  padding: 0.5em 1em;
+  line-height: 1;
   border: none;
   border-radius: 0.25rem;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
+}
+
+.small {
+  padding: 0.25em 0.5em;
+}
+.medium {
+  padding: 0.5em 1em;
+}
+.big {
+  padding: 1em 1.5em;
 }
 
 button:disabled {
@@ -44,6 +58,6 @@ button:disabled {
 
 .tertiary {
   background: var(--color-300);
-  color: var(--color-200);
+  color: white;
 }
 </style>
