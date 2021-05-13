@@ -5,10 +5,4 @@ export const TEAM_OPTIONS = [
   { name: "4v4", value: 4 }
 ] as const;
 
-export const CONTESTANTS = [
-  "Mike",
-  "Flo",
-  "Armin",
-  "Julian P.",
-  "Julian T."
-] as const;
+export const CONTESTANTS = ["Mike", "Flo", "Armin", "Julian P.", "Julian T."];
