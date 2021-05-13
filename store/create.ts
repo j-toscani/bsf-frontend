@@ -2,7 +2,7 @@ import { GetterTree, ActionTree, MutationTree } from "vuex";
 import { RootState } from "~/store";
 
 import { CONTESTANTS, TEAM_OPTIONS } from "@/helper/constants";
-import { Contestant, TeamSize, TeamSizeValue, Team } from "@/types/types";
+import { Contestant, TeamSizeValue, Team } from "@/types/types";
 
 export const state = () => ({
   roster: [] as Contestant[],
@@ -49,6 +49,8 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
 
 export const mutations: MutationTree<CreateTournamentState> = {
   SET_EMPTY_OPEN_SLOTS: (state, val) => (state.allowEmptySlots = val),
+  ADD_TO_CONTESTANTS: (state, contestant: Contestant) =>
+    state.availableContestants.push(contestant),
   ADD_TO_ROSTER: (state, contestant: Contestant) =>
     state.roster.push(contestant),
   REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1),
@@ -64,6 +66,9 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
   addToRoster({ commit, dispatch }, contestant) {
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
+  },
+  addToContestants({ commit }, contestant: Contestant) {
+    commit("ADD_TO_CONTESTANTS", contestant);
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
     commit("REMOVE_FROM_ROSTER", contestantIndex);
