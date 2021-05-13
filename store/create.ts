@@ -32,6 +32,11 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
     );
     return contestants.flat();
   },
+  remainingContestants(state) {
+    return state.availableContestants.filter(
+      (option: Contestant) => !state.roster.includes(option)
+    );
+  },
   allTeamsAreFilled(state) {
     const contestantInTeams = state.teams.map(
       team => team?.contestants?.length
@@ -61,7 +66,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     dispatch("setEmptyTeams");
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
-    commit("DELETE_FROM_ROSTER", contestantIndex);
+    commit("REMOVE_FROM_ROSTER", contestantIndex);
     dispatch("setEmptyTeams");
   },
   setTeamSize({ commit, dispatch }, teamSize) {
