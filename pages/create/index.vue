@@ -7,7 +7,7 @@
       @submit.prevent="addToRoster"
       id="addContestant"
     >
-      <CustomInput
+      <CustomInputWithAutocomplete
         label="Add Contestant"
         id="pick"
         v-model="pick"
@@ -55,13 +55,13 @@ import Vue from "vue";
 import { Contestant } from "@/types/types";
 import { mapGetters } from "vuex";
 
-import CustomInput from "@/components/CustomInput.vue";
+import CustomInputWithAutocomplete from "@/components/CustomInputWithAutocomplete.vue";
 import CustomButton from "@/components/CustomButton.vue";
 
 export default Vue.extend({
   name: "Contestants",
   components: {
-    CustomInput,
+    CustomInputWithAutocomplete,
     CustomButton,
   },
   data(): {
@@ -83,14 +83,10 @@ export default Vue.extend({
   computed: {
     ...mapGetters({
       valid: "create/hasMinAmmountOfContestants",
+      remainingPicks: "create/remainingContestants",
     }),
     dspRoster(): Contestant[] {
       return this.$store.state.create.roster;
-    },
-    remainingPicks(): Contestant[] {
-      return this.$store.state.create.availableContestants.filter(
-        (option: Contestant) => !this.dspRoster.includes(option)
-      );
     },
     pickExists(): boolean {
       return (
