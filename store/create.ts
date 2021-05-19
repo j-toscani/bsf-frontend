@@ -15,13 +15,13 @@ export const state = () => ({
   teamOptions: TEAM_OPTIONS,
 
   teamSize: 1 as TeamSizeValue,
-  availableContestants: [] as Player[]
+  availablePlayers: [] as Player[]
 });
 
 export type CreateTournamentState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CreateTournamentState, RootState> = {
-  hasMinAmmountOfContestants(state) {
+  hasMinAmmountOfPLAYERS(state) {
     return state.roster.length > 3;
   },
   numberOfTeams(state) {
@@ -30,20 +30,16 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
     return state.allowEmptySlots ? max : min;
   },
   overflowingContestants(state) {
-    const contestants = state.teams.map(team =>
-      team.contestants.slice(state.teamSize)
-    );
-    return contestants.flat();
+    const players = state.teams.map(team => team.players.slice(state.teamSize));
+    return players.flat();
   },
   remainingContestants(state) {
-    return state.availableContestants.filter(
+    return state.availablePlayers.filter(
       (option: Player) => !state.roster.includes(option)
     );
   },
   allTeamsAreFilled(state) {
-    const contestantInTeams = state.teams.map(
-      team => team?.contestants?.length
-    );
+    const contestantInTeams = state.teams.map(team => team?.players?.length);
     return contestantInTeams.length > 0
       ? contestantInTeams.every(element => element >= state.teamSize)
       : false;
@@ -52,8 +48,7 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
 
 export const mutations: MutationTree<CreateTournamentState> = {
   SET_DATE: (state, val) => (state.date = val),
-  SET_CONTESTANTS: (state, contestants) =>
-    (state.availableContestants = contestants),
+  SET_PLAYERS: (state, players) => (state.availablePlayers = players),
   SET_NAME: (state, val) => (state.name = val),
   SET_EMPTY_OPEN_SLOTS: (state, val) => (state.allowEmptySlots = val),
   SET_TEAM_SIZE: (state, size: TeamSizeValue) => (state.teamSize = size),
@@ -62,7 +57,7 @@ export const mutations: MutationTree<CreateTournamentState> = {
     state.teams.splice(data.teamIndex, 1, data.team),
   ADD_TO_ROSTER: (state, contestant: Player) => state.roster.push(contestant),
   ADD_TO_TEAM: (state, data: { teamIndex: number; contestant: Player }) =>
-    state.teams[data.teamIndex].contestants.push(data.contestant),
+    state.teams[data.teamIndex].players.push(data.contestant),
   REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1)
 };
 
@@ -77,9 +72,12 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
   },
-  setContestants() {},
-  addToContestants({ commit }, contestant: Player) {
-    commit("ADD_TO_CONTESTANTS", contestant);
+  async setPlayers({ commit }) {
+    const players = await this.$api.players.getAll();
+    commit("SET_PLAYERS", players);
+  },
+  addToPLAYERS({ commit }, contestant: Player) {
+    commit("ADD_TO_PLAYERS", contestant);
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
     commit("REMOVE_FROM_ROSTER", contestantIndex);
@@ -115,7 +113,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
         name: state.teams[index]?.name
           ? state.teams[index]?.name
           : "Team " + (index + 1),
-        contestants: []
+        players: []
       });
     }
     commit("SET_TEAMS", teams);
