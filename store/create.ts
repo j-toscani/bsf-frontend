@@ -6,6 +6,8 @@ import { Contestant, TeamSizeValue, Team } from "@/types/types";
 
 export const state = () => ({
   roster: [] as Contestant[],
+  name: "" as string,
+  date: null as Date | null,
 
   allowEmptySlots: false as boolean,
   teams: [] as Team[],
@@ -48,6 +50,8 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
 };
 
 export const mutations: MutationTree<CreateTournamentState> = {
+  SET_DATE: (state, val) => (state.date = val),
+  SET_NAME: (state, val) => (state.name = val),
   SET_EMPTY_OPEN_SLOTS: (state, val) => (state.allowEmptySlots = val),
   ADD_TO_CONTESTANTS: (state, contestant: Contestant) =>
     state.availableContestants.push(contestant),
@@ -63,6 +67,12 @@ export const mutations: MutationTree<CreateTournamentState> = {
 };
 
 export const actions: ActionTree<CreateTournamentState, RootState> = {
+  setDate({ commit }, date) {
+    commit("SET_DATE", date);
+  },
+  setName({ commit }, name) {
+    commit("SET_NAME", name);
+  },
   addToRoster({ commit, dispatch }, contestant) {
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
