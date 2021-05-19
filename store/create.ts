@@ -68,7 +68,11 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
   setName({ commit }, name) {
     commit("SET_NAME", name);
   },
-  addToRoster({ commit, dispatch }, contestant) {
+  addToRoster({ commit, dispatch, state }, contestantName: string) {
+    const contestant = state.availablePlayers.find(
+      player => player.gamertag === contestantName
+    );
+
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
   },

@@ -30,6 +30,7 @@
         id="pick"
         type="text"
         v-model="pick"
+        :getDspValue="getGamertag"
         :options="remainingPicks"
       />
       <CustomButton
@@ -56,7 +57,7 @@
         >
           ✖</CustomButton
         >
-        <span>{{ contestant }} </span>
+        <span>{{ getGamertag(contestant) }} </span>
       </li>
     </ul>
     <nav>
@@ -105,6 +106,9 @@ export default Vue.extend({
     },
     deleteFromRoster(index: number) {
       this.$store.dispatch("create/deleteFromRoster", index);
+    },
+    getGamertag(option: Player): string {
+      return option.gamertag;
     },
   },
   computed: {
