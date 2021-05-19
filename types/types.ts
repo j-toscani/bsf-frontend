@@ -36,5 +36,5 @@ export interface Performance {}
 
 export interface Team {
   name: string;
-  contestants: Player[];
+  players: Player[];
 }
