@@ -21,7 +21,7 @@
           v-for="(option, index) in filteredOptions"
           :key="index"
         >
-          {{ option.gamertag }}
+          {{ getDspValue(option) }}
         </li>
       </ul>
     </div>
@@ -44,6 +44,10 @@ export default Vue.extend({
       type: [String, Number],
       default: "",
     },
+    getDspValue: {
+      type: Function,
+      default: (option: any) => option,
+    } as PropOptions<(val: any) => string>,
     options: {
       type: Array,
       default: () => [],
@@ -83,22 +87,22 @@ export default Vue.extend({
       return this.focusing !== -1;
     },
     chosen(): boolean {
-      return (
-        this.options.findIndex((value) => value.gamertag === this.value) !== -1
-      );
+      const compareValues = (value: any) =>
+        this.getDspValue(value) === this.value;
+
+      return this.options.findIndex(compareValues) !== -1;
     },
     filteredOptions(): Player[] {
       if (typeof this.value === "number") {
         return this.options;
       }
       return this.options.filter((option) =>
-        option.gamertag.includes(this.value as string)
+        this.getDspValue(option).includes(this.value as string)
       );
     },
   },
   methods: {
     handleKeyPress(e: KeyboardEvent) {
-      console.log("fired");
       switch (e.key) {
         case "ArrowDown":
           e.preventDefault();
@@ -115,7 +119,7 @@ export default Vue.extend({
           // If only one option is available, submit form
           const onlyOneOptionAvailable = this.filteredOptions.length === 1;
           const singleOptionWasPicked =
-            this.filteredOptions[0].gamertag === this.value;
+            this.getDspValue(this.filteredOptions[0]) === this.value;
 
           if (onlyOneOptionAvailable && singleOptionWasPicked) {
             return;
@@ -130,7 +134,8 @@ export default Vue.extend({
       }
     },
     handleEnterPress() {
-      this.emitValue(this.filteredOptions[this.focusing].gamertag);
+      const dspValue = this.getDspValue(this.filteredOptions[this.focusing]);
+      this.emitValue(dspValue);
       this.focusing = -1;
     },
     handleArrowUpPress() {
@@ -163,8 +168,9 @@ export default Vue.extend({
     openList() {
       this.autocompleteShouldShow = true;
     },
-    handleOptionClick(option: string | number) {
-      this.emitValue(option);
+    handleOptionClick(option: Player) {
+      const dspValue = this.getDspValue(option);
+      this.emitValue(dspValue);
       this.closeList();
     },
     handleInput(event: InputEvent) {
@@ -172,12 +178,15 @@ export default Vue.extend({
       const value = (event.target as HTMLInputElement).value;
       this.emitValue(value);
     },
-    emitValue(value: string | number) {
+    emitValue(value: string) {
       this.$emit("input", value);
     },
   },
   mounted() {
-    document.addEventListener("click", () => this.closeList());
+    document.addEventListener("click", this.closeList);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.closeList);
   },
 });
 </script>
