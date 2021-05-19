@@ -5,4 +5,9 @@ export const TEAM_OPTIONS = [
   { name: "4v4", value: 4 }
 ] as const;
 
-export const CONTESTANTS = ["Mike", "Flo", "Armin", "Julian P.", "Julian T."];
+export const ENDPOINTS = [
+  "players",
+  "tournaments",
+  "performances",
+  "games"
+] as const;
