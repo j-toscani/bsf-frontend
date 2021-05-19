@@ -2,7 +2,7 @@ import { Context } from "@nuxt/types";
 import { Ressource, RessourceType } from "@/types/derivedTypes";
 // Based on https://blog.lichter.io/posts/nuxt-api-call-organization-and-decoupling/
 
-const createBaseRepository = <T extends Ressource>(ctx: Context) => (
+const createBaseRepository = (ctx: Context) => <T extends Ressource>(
   ressource: T
 ) => {
   return {
