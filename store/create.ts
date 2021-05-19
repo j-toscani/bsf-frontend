@@ -1,11 +1,12 @@
 import { GetterTree, ActionTree, MutationTree } from "vuex";
 import { RootState } from "~/store";
 
-import { CONTESTANTS, TEAM_OPTIONS } from "@/helper/constants";
-import { Contestant, TeamSizeValue, Team } from "@/types/types";
+import { TEAM_OPTIONS } from "@/helper/constants";
+import { Player, Team } from "@/types/types";
+import { TeamSizeValue } from "@/types/derivedTypes";
 
 export const state = () => ({
-  roster: [] as Contestant[],
+  roster: [] as Player[],
   name: "" as string,
   date: null as Date | null,
 
@@ -14,7 +15,7 @@ export const state = () => ({
   teamOptions: TEAM_OPTIONS,
 
   teamSize: 1 as TeamSizeValue,
-  availableContestants: CONTESTANTS
+  availableContestants: [] as Player[]
 });
 
 export type CreateTournamentState = ReturnType<typeof state>;
@@ -36,7 +37,7 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
   },
   remainingContestants(state) {
     return state.availableContestants.filter(
-      (option: Contestant) => !state.roster.includes(option)
+      (option: Player) => !state.roster.includes(option)
     );
   },
   allTeamsAreFilled(state) {
@@ -51,19 +52,18 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
 
 export const mutations: MutationTree<CreateTournamentState> = {
   SET_DATE: (state, val) => (state.date = val),
+  SET_CONTESTANTS: (state, contestants) =>
+    (state.availableContestants = contestants),
   SET_NAME: (state, val) => (state.name = val),
   SET_EMPTY_OPEN_SLOTS: (state, val) => (state.allowEmptySlots = val),
-  ADD_TO_CONTESTANTS: (state, contestant: Contestant) =>
-    state.availableContestants.push(contestant),
-  ADD_TO_ROSTER: (state, contestant: Contestant) =>
-    state.roster.push(contestant),
-  REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1),
   SET_TEAM_SIZE: (state, size: TeamSizeValue) => (state.teamSize = size),
   SET_TEAMS: (state, teams: Team[]) => (state.teams = teams),
-  ADD_TO_TEAM: (state, data: { teamIndex: number; contestant: Contestant }) =>
-    state.teams[data.teamIndex].contestants.push(data.contestant),
   SET_TEAM: (state, data: { teamIndex: number; team: Team }) =>
-    state.teams.splice(data.teamIndex, 1, data.team)
+    state.teams.splice(data.teamIndex, 1, data.team),
+  ADD_TO_ROSTER: (state, contestant: Player) => state.roster.push(contestant),
+  ADD_TO_TEAM: (state, data: { teamIndex: number; contestant: Player }) =>
+    state.teams[data.teamIndex].contestants.push(data.contestant),
+  REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1)
 };
 
 export const actions: ActionTree<CreateTournamentState, RootState> = {
@@ -77,7 +77,8 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
   },
-  addToContestants({ commit }, contestant: Contestant) {
+  setContestants() {},
+  addToContestants({ commit }, contestant: Player) {
     commit("ADD_TO_CONTESTANTS", contestant);
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
@@ -90,7 +91,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     dispatch("handleTeamChange");
   },
   handleTeamChange({ state, dispatch }) {
-    state.roster.forEach((contestant: Contestant, index: number) =>
+    state.roster.forEach((contestant: Player, index: number) =>
       dispatch("addToTeamByIndex", { contestant, index })
     );
   },
@@ -103,7 +104,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     dispatch("setEmptyTeams");
     dispatch("handleTeamChange");
   },
-  addToTeam({ commit }, data: { teamIndex: number; contestant: Contestant }) {
+  addToTeam({ commit }, data: { teamIndex: number; contestant: Player }) {
     commit("ADD_TO_TEAM", data);
   },
   setEmptyTeams({ commit, getters, state }) {
