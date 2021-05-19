@@ -29,14 +29,23 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    axios: {
+      baseURL: "http://localhost:1337" // Used as fallback if no runtime config is provided
+    },
+
+    publicRuntimeConfig: {
+      axios: {
+        browserBaseURL: process.env.BROWSER_BASE_URL
+      }
+    }
+  },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   // pwa: {
