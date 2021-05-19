@@ -7,7 +7,7 @@
       @submit.prevent="createNewContestant"
     >
       <CustomInput
-        label="Create new Contestant"
+        label="Create new Player"
         v-model="newContestant"
         id="newContestant"
       />
@@ -26,7 +26,7 @@
       id="addContestant"
     >
       <CustomInputWithAutocomplete
-        label="Add Contestant from Database"
+        label="Add Player from Database"
         id="pick"
         type="text"
         v-model="pick"
@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Contestant } from "@/types/types";
+import { Player } from "@/types/types";
 import { mapGetters } from "vuex";
 
 import CustomInputWithAutocomplete from "@/components/CustomInputWithAutocomplete.vue";
@@ -112,13 +112,13 @@ export default Vue.extend({
       valid: "create/hasMinAmmountOfContestants",
       remainingPicks: "create/remainingContestants",
     }),
-    dspRoster(): Contestant[] {
+    dspRoster(): Player[] {
       return this.$store.state.create.roster;
     },
     pickExists(): boolean {
       return (
         this.$store.state.create.availableContestants.findIndex(
-          (option: Contestant) => this.pick === option
+          (option: Player) => this.pick === option.gamertag
         ) !== -1
       );
     },
