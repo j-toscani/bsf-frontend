@@ -5,7 +5,7 @@
       <CustomInput label="Tournamentname:" type="text" v-model="name" />
     </div>
     <nav>
-      <nuxt-link class="form__next-link" to="/create/contestants" v-if="valid">
+      <nuxt-link class="form__next-link" to="/create/players" v-if="valid">
         Next
       </nuxt-link>
       <span class="form__next-link disabled" v-else> Next </span>

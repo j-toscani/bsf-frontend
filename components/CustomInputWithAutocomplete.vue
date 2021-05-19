@@ -21,7 +21,7 @@
           v-for="(option, index) in filteredOptions"
           :key="index"
         >
-          {{ option }}
+          {{ option.gamertag }}
         </li>
       </ul>
     </div>
@@ -30,6 +30,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+import { Player } from "~/types/types";
 
 export default Vue.extend({
   name: "CustomInputWithAutocomplete",
@@ -46,7 +47,7 @@ export default Vue.extend({
     options: {
       type: Array,
       default: () => [],
-    } as PropOptions<string[]>,
+    } as PropOptions<Player[]>,
   },
   data(): {
     autocompleteShouldShow: boolean;
@@ -82,14 +83,16 @@ export default Vue.extend({
       return this.focusing !== -1;
     },
     chosen(): boolean {
-      return this.options.findIndex((value) => value === this.value) !== -1;
+      return (
+        this.options.findIndex((value) => value.gamertag === this.value) !== -1
+      );
     },
-    filteredOptions(): string[] {
+    filteredOptions(): Player[] {
       if (typeof this.value === "number") {
         return this.options;
       }
       return this.options.filter((option) =>
-        option.includes(this.value as string)
+        option.gamertag.includes(this.value as string)
       );
     },
   },
@@ -111,7 +114,8 @@ export default Vue.extend({
         case "Enter":
           // If only one option is available, submit form
           const onlyOneOptionAvailable = this.filteredOptions.length === 1;
-          const singleOptionWasPicked = this.filteredOptions[0] === this.value;
+          const singleOptionWasPicked =
+            this.filteredOptions[0].gamertag === this.value;
 
           if (onlyOneOptionAvailable && singleOptionWasPicked) {
             return;
@@ -126,7 +130,7 @@ export default Vue.extend({
       }
     },
     handleEnterPress() {
-      this.emitValue(this.filteredOptions[this.focusing]);
+      this.emitValue(this.filteredOptions[this.focusing].gamertag);
       this.focusing = -1;
     },
     handleArrowUpPress() {

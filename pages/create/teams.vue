@@ -16,7 +16,7 @@
             v-for="(slot, cIndex) in slotsInTeams"
             :key="'team' + tIndex + 'contestant' + cIndex"
           >
-            {{ team.contestants[slot] ? team.contestants[slot] : "---" }}
+            {{ team.players[slot] ? team.players[slot] : "---" }}
           </li>
         </ul>
       </li>

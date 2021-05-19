@@ -1,5 +1,13 @@
-import { Plugin } from "@nuxt/types";
-import createBaseRepository from "@/helper/createBaseRepository";
+import { Plugin, Context } from "@nuxt/types";
+import createBaseRepository, {
+  Repository
+} from "@/helper/createBaseRepository";
+
+type Api = {
+  players: Repository<"players">;
+  // tournaments: ApiRepository<"tournaments">;
+  // performances: ApiRepository<"performances">;
+};
 
 const apiPlugin: Plugin = (context, inject) => {
   const baseRepository = createBaseRepository(context);
@@ -16,25 +24,25 @@ const apiPlugin: Plugin = (context, inject) => {
 declare module "vue/types/vue" {
   // this.$api inside Vue components
   interface Vue {
-    $api(message: string): void;
+    $api: Api;
   }
 }
 
 declare module "@nuxt/types" {
   // nuxtContext.app.$api inside asyncData, fetch, plugins, middleware, nuxtServerInit
   interface NuxtAppOptions {
-    $api(message: string): void;
+    $api: Api;
   }
   // nuxtContext.$api
   interface Context {
-    $api(message: string): void;
+    $api: Api;
   }
 }
 
 declare module "vuex/types/index" {
   // this.$api inside Vuex stores
   interface Store<S> {
-    $api(message: string): void;
+    $api: Api;
   }
 }
 

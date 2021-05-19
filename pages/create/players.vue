@@ -117,11 +117,14 @@ export default Vue.extend({
     },
     pickExists(): boolean {
       return (
-        this.$store.state.create.availableContestants.findIndex(
+        this.$store.state.create.availablePlayers.findIndex(
           (option: Player) => this.pick === option.gamertag
         ) !== -1
       );
     },
+  },
+  mounted() {
+    this.$store.dispatch("create/setPlayers");
   },
 });
 </script>
