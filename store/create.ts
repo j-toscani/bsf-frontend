@@ -80,7 +80,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     const players = await this.$api.players.getAll();
     commit("SET_PLAYERS", players);
   },
-  addToPLAYERS({ commit }, contestant: Player) {
+  addToPlayers({ commit }, contestant: Player) {
     commit("ADD_TO_PLAYERS", contestant);
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
