@@ -90,9 +90,12 @@ export const mutations: MutationTree<CreateTournamentState> = {
 };
 
 export const actions: ActionTree<CreateTournamentState, RootState> = {
-  setTournamentId({ commit }, id) {
-    commit("SET_TOURNAMENT_ID", id);
-    commit("SET_TOURNAMENT_CREATOR", this.$api.tournamentMatchupCreator(id));
+  setTournamentId({ commit }, tournament) {
+    commit("SET_TOURNAMENT_ID", tournament.id);
+    commit(
+      "SET_TOURNAMENT_CREATOR",
+      this.$api.tournamentMatchupCreator(tournament)
+    );
   },
   setDate({ commit }, date) {
     commit("SET_DATE", date);
