@@ -34,7 +34,7 @@
     <CustomButton size="big" level="tertiary" @click="handleCreateTournament">
       Create Tournament
     </CustomButton>
-    <CustomButton size="big" level="tertiary">
+    <CustomButton size="big" level="tertiary" @click="handleCreateMatchups">
       Create Matches for Tournament
     </CustomButton>
   </section>
@@ -43,7 +43,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import { Team } from "@/types/types";
+import { ApiGame, Team } from "@/types/types";
 
 import CustomSelect from "~/components/CustomSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
@@ -68,6 +68,9 @@ export default Vue.extend({
       allTeamsAreFilled: "create/allTeamsAreFilled",
       numberOfTeams: "create/numberOfTeams",
       overflowingContestants: "create/overflowingContestants",
+      tournamentCreateData: "create/tournamentCreateData",
+      tournamentMatchups: "create/tournamentMatchups",
+      matchUpCreator: "create/matchUpCreator",
     }),
     teams(): Team[] {
       return this.$store.state.create.teams;
@@ -80,6 +83,41 @@ export default Vue.extend({
   methods: {
     getTeamTypeName(data: { name: string; value: number }) {
       return data.name;
+    },
+    handleCreateTournament() {
+      this.$api.tournaments
+        .create(this.tournamentCreateData)
+        .then((tournament) =>
+          this.$store.dispatch("create/setTournamentId", tournament.id!)
+        )
+        .catch((error) => console.error(error));
+    },
+    async handleCreateMatchups() {
+      if (!this.matchUpCreator) {
+        console.error("No tournament id!");
+        return;
+      }
+      const matchUpCreationRequests: Promise<
+        ApiGame | undefined
+      >[] = this.tournamentMatchups.map(
+        (matchup: [Team, Team], index: number) => {
+          return this.matchUpCreator(...matchup, index + 1);
+        }
+      );
+
+      try {
+        const games = (await Promise.all(matchUpCreationRequests)).filter(
+          (game) => game
+        );
+
+        await this.$api.tournaments.update(
+          this.$store.state.create.tournamentId as string,
+          // all games exist because of filter
+          { games: games.map((game) => game!.id!) }
+        );
+      } catch (error) {
+        console.error(error);
+      }
     },
     handleTeamCountButtonClick() {
       this.$store.dispatch("create/toggleTeamCount");
