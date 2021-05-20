@@ -19,24 +19,21 @@ export type ApiPlayer = {
 };
 
 export interface ApiTournament {
-  _id: string;
-  teamsize: string;
-  published_at: Date;
+  teamsize: "one" | "two" | "three";
+  _id?: string;
+  published_at?: Date;
   date: Date;
   name: string;
-  matches?: ApiReference[];
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt: Date;
-  __v: number;
-  games: [];
-  id: string;
+  __v?: number;
+  contestants: ApiPlayer[] | string[];
+  games: ApiGame[] | String[];
+  id?: string;
 }
 
 export interface ApiGame {
   _id?: string;
-  name?: string; // old
-  name_team_one?: string; // old
-  name_team_two?: string; // old
   published_at?: Date;
   createdAt?: Date;
   updatedAt?: Date;
