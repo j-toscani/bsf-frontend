@@ -16,7 +16,7 @@
             v-for="(slot, cIndex) in slotsInTeams"
             :key="'team' + tIndex + 'contestant' + cIndex"
           >
-            {{ team.players[slot] ? team.players[slot] : "---" }}
+            {{ team.players[slot] ? team.players[slot].gamertag : "---" }}
           </li>
         </ul>
       </li>
@@ -27,7 +27,7 @@
       <span> You are missing free slots for these Users: </span>
       <ul class="has-list-style">
         <li v-for="(user, index) in overflowingContestants" :key="index">
-          {{ user }}
+          {{ user.gamertag }}
         </li>
       </ul>
     </div>
