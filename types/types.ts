@@ -32,6 +32,29 @@ export interface ApiTournament {
   id: string;
 }
 
+export interface ApiGame {
+  _id: string;
+  name: string;
+  name_team_one?: string; // old
+  name_team_two?: string; // old
+  published_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  __v: number;
+  tournament: ApiTournament;
+  team_performances: {
+    team_a: ApiPerformance[];
+    team_b: ApiPerformance[];
+    _id: string;
+    __v: number;
+    id: string;
+  };
+  name_team_a: string;
+  name_team_b: string;
+  g_id: string;
+  id: string;
+}
+
 export interface ApiPerformance {
   _id?: string;
   points: {
@@ -68,3 +91,11 @@ export interface Team {
   name: string;
   players: ApiPlayer[];
 }
+
+export type PerformancePoints = {
+  goals: number;
+  points: number;
+  assists: number;
+  saves: number;
+  shots: number;
+};

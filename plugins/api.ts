@@ -1,12 +1,13 @@
-import { Plugin, Context } from "@nuxt/types";
+import { Plugin } from "@nuxt/types";
 import createBaseRepository, {
   Repository
 } from "@/helper/createBaseRepository";
 
-type Api = {
+export type Api = {
   players: Repository<"players">;
-  // tournaments: ApiRepository<"tournaments">;
-  // performances: ApiRepository<"performances">;
+  tournaments: Repository<"tournaments">;
+  performances: Repository<"performances">;
+  games: Repository<"games">;
 };
 
 const apiPlugin: Plugin = (context, inject) => {
