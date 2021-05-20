@@ -4,6 +4,7 @@ import { RootState } from "~/store";
 import { TEAM_OPTIONS } from "@/helper/constants";
 import { ApiPlayer, Team } from "@/types/types";
 import { TeamSizeValue } from "@/types/derivedTypes";
+import teamSizeNumberToWord from "~/helper/teamSizeNumberToWord";
 
 export const state = () => ({
   roster: [] as ApiPlayer[],
@@ -21,6 +22,16 @@ export const state = () => ({
 export type CreateTournamentState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CreateTournamentState, RootState> = {
+  tournamentCreateData(state) {
+    let teamSizeWord = teamSizeNumberToWord(state.teamSize);
+    return {
+      teamsize: teamSizeWord,
+      date: state.date,
+      name: state.name,
+      contestants: state.roster.map(player => player.id),
+      games: []
+    };
+  },
   hasMinAmmountOfContestants(state) {
     return state.roster.length > 3;
   },
