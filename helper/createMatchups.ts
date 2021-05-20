@@ -19,6 +19,7 @@ export default function createTournamentMatchupCreator(api: Api) {
         teamA,
         teamB
       ]);
+
       const createdGame = await api.games.create(game);
       const players = [...teamA.players, ...teamB.players];
 
