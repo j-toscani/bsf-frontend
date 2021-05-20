@@ -17,6 +17,6 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
   async fetchTournaments({ commit }) {
     const tournaments = await this.$api.tournaments.getMany();
-    commit("CHANGE_NAME", tournaments);
+    commit("SET_TOURNAMENTS", tournaments);
   }
 };
