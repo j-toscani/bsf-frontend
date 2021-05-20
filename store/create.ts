@@ -111,7 +111,10 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     commit("ADD_TO_ROSTER", contestant);
     dispatch("setEmptyTeams");
   },
-  async setPlayers({ commit }) {
+  addToContestants({ commit }, contestant: ApiPlayer) {
+    commit("ADD_TO_CONTESTANTS", contestant);
+  },
+  async fetchPlayers({ commit }) {
     const players = await this.$api.players.getAll();
     commit("SET_PLAYERS", players);
   },
