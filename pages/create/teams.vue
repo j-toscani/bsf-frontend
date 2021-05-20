@@ -31,6 +31,12 @@
         </li>
       </ul>
     </div>
+    <CustomButton size="big" level="tertiary" @click="handleCreateTournament">
+      Create Tournament
+    </CustomButton>
+    <CustomButton size="big" level="tertiary">
+      Create Matches for Tournament
+    </CustomButton>
   </section>
 </template>
 
@@ -40,9 +46,10 @@ import { mapGetters } from "vuex";
 import { Team } from "@/types/types";
 
 import CustomSelect from "~/components/CustomSelect.vue";
+import CustomButton from "@/components/CustomButton.vue";
 
 export default Vue.extend({
-  components: { CustomSelect },
+  components: { CustomSelect, CustomButton },
   name: "Teams",
   asyncData({ store }) {
     store.dispatch("create/setTeamSize", 1);
