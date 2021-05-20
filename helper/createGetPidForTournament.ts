@@ -1,8 +1,10 @@
-export default function createGetPidForTournament(tournamentName: string) {
+import { ApiTournament } from "~/types/types";
+
+export default function createGetPidForTournament(tournament: ApiTournament) {
   return (playerName: string, nthGame: number) => {
     const uuidElements = [
       playerName,
-      tournamentName,
+      tournament.name,
       nthGame.toString()
     ].map(name => transformForUUID(name));
     return uuidElements.join("__");

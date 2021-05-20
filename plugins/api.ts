@@ -1,22 +1,31 @@
-import { Plugin, Context } from "@nuxt/types";
+import { Plugin } from "@nuxt/types";
+import { Ressource } from "@/types/derivedTypes";
 import createBaseRepository, {
-  Repository
+  BaseRepository
 } from "@/helper/createBaseRepository";
+import addTournamentMatchupCreator, {
+  TrounamentMatchupCreator
+} from "~/helper/createTournamentMatchupCreator";
 
-type Api = {
-  players: Repository<"players">;
-  // tournaments: ApiRepository<"tournaments">;
-  // performances: ApiRepository<"performances">;
+export type Repositories = {
+  [T in Ressource]: BaseRepository<T>;
 };
+
+export interface Api extends Repositories {
+  tournamentMatchupCreator: TrounamentMatchupCreator;
+}
 
 const apiPlugin: Plugin = (context, inject) => {
   const baseRepository = createBaseRepository(context);
 
-  const playerRepository = baseRepository("players");
-
-  const api = {
-    players: playerRepository
+  let repos: Repositories = {
+    players: baseRepository("players"),
+    tournaments: baseRepository("tournaments"),
+    performances: baseRepository("performances"),
+    games: baseRepository("games")
   };
+
+  const api = addTournamentMatchupCreator(repos);
 
   inject("api", api);
 };

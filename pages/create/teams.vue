@@ -16,7 +16,7 @@
             v-for="(slot, cIndex) in slotsInTeams"
             :key="'team' + tIndex + 'contestant' + cIndex"
           >
-            {{ team.players[slot] ? team.players[slot] : "---" }}
+            {{ team.players[slot] ? team.players[slot].gamertag : "---" }}
           </li>
         </ul>
       </li>
@@ -27,22 +27,26 @@
       <span> You are missing free slots for these Users: </span>
       <ul class="has-list-style">
         <li v-for="(user, index) in overflowingContestants" :key="index">
-          {{ user }}
+          {{ user.gamertag }}
         </li>
       </ul>
     </div>
+    <CustomButton size="big" level="tertiary" @click="handleCreateTournament">
+      Create Tournament
+    </CustomButton>
   </section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import { Team } from "@/types/types";
+import { ApiGame, Team } from "@/types/types";
 
 import CustomSelect from "~/components/CustomSelect.vue";
+import CustomButton from "@/components/CustomButton.vue";
 
 export default Vue.extend({
-  components: { CustomSelect },
+  components: { CustomSelect, CustomButton },
   name: "Teams",
   asyncData({ store }) {
     store.dispatch("create/setTeamSize", 1);
@@ -61,6 +65,9 @@ export default Vue.extend({
       allTeamsAreFilled: "create/allTeamsAreFilled",
       numberOfTeams: "create/numberOfTeams",
       overflowingContestants: "create/overflowingContestants",
+      tournamentCreateData: "create/tournamentCreateData",
+      tournamentMatchups: "create/tournamentMatchups",
+      matchUpCreator: "create/matchUpCreator",
     }),
     teams(): Team[] {
       return this.$store.state.create.teams;
@@ -73,6 +80,64 @@ export default Vue.extend({
   methods: {
     getTeamTypeName(data: { name: string; value: number }) {
       return data.name;
+    },
+    createMatchups(): Promise<ApiGame | undefined>[] {
+      return this.tournamentMatchups.map(
+        (matchup: [Team, Team], index: number) => {
+          return this.matchUpCreator(matchup, index + 1);
+        }
+      );
+    },
+    updateTournamentsWithGameData(games: (ApiGame | undefined)[]) {
+      games = games.filter((game) => game);
+
+      return this.$api.tournaments.update(
+        this.$store.state.create.tournamentId as string,
+        // all games exist because of filter
+        // ids exist as games come from backend
+        { games: (games as ApiGame[]).map((game) => game.id!) }
+      );
+    },
+    async handleCreateTournament() {
+      try {
+        const tournament = await this.handleCreateTournamentEntry();
+        this.$store.dispatch("create/setTournamentId", tournament);
+        this.$toast.add("Tournament created");
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      this.handleCreateMatchups();
+    },
+    handleCreateTournamentEntry() {
+      return this.$api.tournaments.create(this.tournamentCreateData);
+    },
+    async handleCreateMatchups() {
+      if (!this.matchUpCreator) {
+        console.error("No tournament id!");
+        return;
+      }
+      const toastId = this.$toast.add("Games are being created!");
+      const matchUpCreationRequests = this.createMatchups();
+      try {
+        const games = await Promise.all(matchUpCreationRequests);
+
+        await this.updateTournamentsWithGameData(games);
+        this.feedbackTournamentCreationSuccess(toastId);
+      } catch (error) {
+        console.error(error);
+        this.feedbackTournamentCreationfailure(toastId);
+      }
+    },
+    feedbackTournamentCreationSuccess(toastId: number) {
+      this.$toast.remove(toastId);
+      this.$toast.add("Games created!");
+      this.$router.push("/");
+    },
+    feedbackTournamentCreationfailure(toastId: number) {
+      this.$toast.remove(toastId);
+      this.$toast.add("Game creation unsuccessful!");
     },
     handleTeamCountButtonClick() {
       this.$store.dispatch("create/toggleTeamCount");

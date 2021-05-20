@@ -4,35 +4,56 @@ interface ApiReference {
   ref: string;
 }
 
-export type Player = {
+export type ApiPlayer = {
   discord: boolean;
   telegram: boolean;
   mail: boolean;
-  participated_in: Tournament[];
+  participated_in: ApiTournament[] | string;
   _id: string;
   gamertag: string;
   createdAt: Date;
   updatedAt: Date;
   __v: number;
-  performances: Performance[];
+  performances: ApiPerformance[];
   id: string;
 };
 
-export interface Tournament {
-  _id: string;
-  teamsize: string;
-  published_at: Date;
+export interface ApiTournament {
+  teamsize: "one" | "two" | "three";
+  _id?: string;
+  published_at?: Date;
   date: Date;
   name: string;
-  matches?: ApiReference[];
-  createdAt: Date;
+  createdAt?: Date;
   updatedAt: Date;
-  __v: number;
-  games: [];
-  id: string;
+  __v?: number;
+  contestants: ApiPlayer[] | string[];
+  games: ApiGame[] | String[];
+  id?: string;
 }
 
-export interface Performance {
+export interface ApiGame {
+  _id?: string;
+  published_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+  __v?: number;
+  tournament: ApiTournament | string;
+  teams: {
+    team_a: ApiPlayer[] | string[];
+    team_b: ApiPlayer[] | string[];
+    _id?: string;
+    __v?: number;
+    id?: string;
+  };
+  performances: ApiPerformance[] | string[];
+  name_team_a: string;
+  name_team_b: string;
+  g_id: string;
+  id?: string;
+}
+
+export interface ApiPerformance {
   _id?: string;
   points: {
     _id?: string;
@@ -47,18 +68,7 @@ export interface Performance {
   createdAt?: Date;
   updatedAt?: Date;
   __v?: 1;
-  player: {
-    discord: boolean;
-    telegram: boolean;
-    mail: boolean;
-    participated_in: [string];
-    _id?: string;
-    gamertag: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    __v?: number;
-    id?: string;
-  };
+  player: ApiPlayer | string;
   p_id: string;
   game: string;
   id?: string;
@@ -66,5 +76,13 @@ export interface Performance {
 
 export interface Team {
   name: string;
-  players: Player[];
+  players: ApiPlayer[];
 }
+
+export type PerformancePoints = {
+  goals: number;
+  points: number;
+  assists: number;
+  saves: number;
+  shots: number;
+};
