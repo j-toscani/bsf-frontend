@@ -2,7 +2,7 @@ import { Context } from "@nuxt/types";
 import { Ressource, RessourceType } from "@/types/derivedTypes";
 
 export type BaseRepository<T extends Ressource> = {
-  getAll(): Promise<RessourceType<T>[]>;
+  getMany(): Promise<RessourceType<T>[]>;
   getOne(query: string): Promise<RessourceType<T>>;
   create(payload: RessourceType<T>): Promise<RessourceType<T>>;
   update(
@@ -17,11 +17,13 @@ function createBaseRepository(ctx: Context) {
   return <T extends Ressource>(ressource: T) => {
     ctx.$axios.setBaseURL("http://localhost:1337");
     return {
-      getAll(): Promise<RessourceType<T>[]> {
-        return ctx.$axios.$get(`/${ressource}`);
+      getMany(query?: string): Promise<RessourceType<T>[]> {
+        const path = query ? `/${ressource}/${query}` : `/${ressource}`;
+        return ctx.$axios.$get(path);
       },
-      getOne(query: string): Promise<RessourceType<T>> {
-        return ctx.$axios.$get(`/${ressource}/${query}`);
+      getOne(id: string, query: string): Promise<RessourceType<T>> {
+        const slug = query ? id + query : id;
+        return ctx.$axios.$get(`/${ressource}/${slug}`);
       },
       create(payload: RessourceType<T>): Promise<RessourceType<T>> {
         return ctx.$axios.$post(`/${ressource}`, payload);
