@@ -1,8 +1,10 @@
-export default function createGetGameUuid(tournamentName: string) {
-  (teamNameA: string, teamNameB: string) => {
+import { ApiTournament } from "~/types/types";
+
+export default function createGetGidForTournament(tournament: ApiTournament) {
+  return (teamNameA: string, teamNameB: string) => {
     const formattedNames = [teamNameA, teamNameB].map(trimAndFormat);
     const [formattedNameA, formattedNameB] = formattedNames;
-    return `${tournamentName}__${formattedNameA}_vs_${formattedNameB}`;
+    return `${tournament.name}__${formattedNameA}_vs_${formattedNameB}`;
   };
 }
 
