@@ -111,7 +111,7 @@ export default Vue.extend({
       this.handleCreateMatchups();
     },
     handleCreateTournamentEntry() {
-      this.$api.tournaments.create(this.tournamentCreateData);
+      return this.$api.tournaments.create(this.tournamentCreateData);
     },
     async handleCreateMatchups() {
       if (!this.matchUpCreator) {
