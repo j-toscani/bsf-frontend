@@ -3,10 +3,14 @@ import { RootState } from "~/store";
 
 import { TEAM_OPTIONS } from "@/helper/constants";
 import { ApiPlayer, Team } from "@/types/types";
+import { TrounamentMatchupCreator } from "@/helper/createTournamentMatchupCreator";
 import { TeamSizeValue } from "@/types/derivedTypes";
-import teamSizeNumberToWord from "~/helper/teamSizeNumberToWord";
+import teamSizeNumberToWord from "@/helper/teamSizeNumberToWord";
+import createMatchPairings from "@/helper/createMatchPairings";
 
 export const state = () => ({
+  tournamentId: null,
+  matchupCreator: null as null | ReturnType<TrounamentMatchupCreator>,
   roster: [] as ApiPlayer[],
   name: "" as string,
   date: null as Date | null,
@@ -31,6 +35,16 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
       contestants: state.roster.map(player => player.id),
       games: []
     };
+  },
+  matchUpCreator(state) {
+    return state.matchupCreator;
+  },
+  tournamentMatchups(state) {
+    if (state.teams.length < 2) {
+      return [];
+    }
+
+    return createMatchPairings(state.teams);
   },
   hasMinAmmountOfContestants(state) {
     return state.roster.length > 3;
@@ -58,6 +72,8 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
 };
 
 export const mutations: MutationTree<CreateTournamentState> = {
+  SET_TOURNAMENT_ID: (state, id) => (state.tournamentId = id),
+  SET_TOURNAMENT_CREATOR: (state, creator) => (state.matchupCreator = creator),
   SET_DATE: (state, val) => (state.date = val),
   SET_PLAYERS: (state, players) => (state.availablePlayers = players),
   SET_NAME: (state, val) => (state.name = val),
@@ -74,6 +90,10 @@ export const mutations: MutationTree<CreateTournamentState> = {
 };
 
 export const actions: ActionTree<CreateTournamentState, RootState> = {
+  setTournamentId({ commit }, id) {
+    commit("SET_TOURNAMENT_ID", id);
+    commit("SET_TOURNAMENT_CREATOR", this.$api.tournamentMatchupCreator(id));
+  },
   setDate({ commit }, date) {
     commit("SET_DATE", date);
   },
