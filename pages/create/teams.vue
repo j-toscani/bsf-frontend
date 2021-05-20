@@ -84,12 +84,30 @@ export default Vue.extend({
     getTeamTypeName(data: { name: string; value: number }) {
       return data.name;
     },
+    createMatchups(): Promise<ApiGame | undefined>[] {
+      return this.tournamentMatchups.map(
+        (matchup: [Team, Team], index: number) => {
+          return this.matchUpCreator(matchup, index + 1);
+        }
+      );
+    },
+    updateTournamentsWithGameData(games: (ApiGame | undefined)[]) {
+      games = games.filter((game) => game);
+
+      return this.$api.tournaments.update(
+        this.$store.state.create.tournamentId as string,
+        // all games exist because of filter
+        // ids exist as games come from backend
+        { games: (games as ApiGame[]).map((game) => game.id!) }
+      );
+    },
     handleCreateTournament() {
       this.$api.tournaments
         .create(this.tournamentCreateData)
-        .then((tournament) =>
-          this.$store.dispatch("create/setTournamentId", tournament.id!)
-        )
+        .then((tournament) => {
+          this.$store.dispatch("create/setTournamentId", tournament);
+          this.$toast.add("Tournament created");
+        })
         .catch((error) => console.error(error));
     },
     async handleCreateMatchups() {
@@ -97,26 +115,18 @@ export default Vue.extend({
         console.error("No tournament id!");
         return;
       }
-      const matchUpCreationRequests: Promise<
-        ApiGame | undefined
-      >[] = this.tournamentMatchups.map(
-        (matchup: [Team, Team], index: number) => {
-          return this.matchUpCreator(...matchup, index + 1);
-        }
-      );
-
+      const toastId = this.$toast.add("Games are being created!");
+      const matchUpCreationRequests = this.createMatchups();
       try {
-        const games = (await Promise.all(matchUpCreationRequests)).filter(
-          (game) => game
-        );
+        const games = await Promise.all(matchUpCreationRequests);
 
-        await this.$api.tournaments.update(
-          this.$store.state.create.tournamentId as string,
-          // all games exist because of filter
-          { games: games.map((game) => game!.id!) }
-        );
+        await this.updateTournamentsWithGameData(games);
+        this.$toast.remove(toastId);
+        this.$toast.add("Games created!");
       } catch (error) {
         console.error(error);
+        this.$toast.remove(toastId);
+        this.$toast.add("Game creation unsuccessful!");
       }
     },
     handleTeamCountButtonClick() {
