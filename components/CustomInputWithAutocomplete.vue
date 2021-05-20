@@ -30,7 +30,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Player } from "~/types/types";
+import { ApiPlayer } from "@/types/types";
 
 export default Vue.extend({
   name: "CustomInputWithAutocomplete",
@@ -51,7 +51,7 @@ export default Vue.extend({
     options: {
       type: Array,
       default: () => [],
-    } as PropOptions<Player[]>,
+    } as PropOptions<ApiPlayer[]>,
   },
   data(): {
     autocompleteShouldShow: boolean;
@@ -92,7 +92,7 @@ export default Vue.extend({
 
       return this.options.findIndex(compareValues) !== -1;
     },
-    filteredOptions(): Player[] {
+    filteredOptions(): ApiPlayer[] {
       if (typeof this.value === "number") {
         return this.options;
       }
@@ -168,7 +168,7 @@ export default Vue.extend({
     openList() {
       this.autocompleteShouldShow = true;
     },
-    handleOptionClick(option: Player) {
+    handleOptionClick(option: ApiPlayer) {
       const dspValue = this.getDspValue(option);
       this.emitValue(dspValue);
       this.closeList();

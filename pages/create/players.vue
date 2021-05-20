@@ -71,7 +71,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Player } from "@/types/types";
+import { ApiPlayer } from "@/types/types";
 import { mapGetters } from "vuex";
 
 import CustomInputWithAutocomplete from "@/components/CustomInputWithAutocomplete.vue";
@@ -107,7 +107,7 @@ export default Vue.extend({
     deleteFromRoster(index: number) {
       this.$store.dispatch("create/deleteFromRoster", index);
     },
-    getGamertag(option: Player): string {
+    getGamertag(option: ApiPlayer): string {
       return option.gamertag;
     },
   },
@@ -116,13 +116,13 @@ export default Vue.extend({
       valid: "create/hasMinAmmountOfContestants",
       remainingPicks: "create/remainingContestants",
     }),
-    dspRoster(): Player[] {
+    dspRoster(): ApiPlayer[] {
       return this.$store.state.create.roster;
     },
     pickExists(): boolean {
       return (
         this.$store.state.create.availablePlayers.findIndex(
-          (option: Player) => this.pick === option.gamertag
+          (option: ApiPlayer) => this.pick === option.gamertag
         ) !== -1
       );
     },
