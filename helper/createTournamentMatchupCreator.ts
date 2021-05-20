@@ -1,4 +1,4 @@
-import { Api } from "~/plugins/api";
+import { Api, Repositories } from "~/plugins/api";
 import { ApiTournament, Team } from "~/types/types";
 
 import createGetGidForTournament from "./createGetGidForTournament";
@@ -6,7 +6,21 @@ import createGetPidForTournament from "./createGetPidForTournament";
 import createTournamentPerformance from "./createTournamentPerformance";
 import createGame from "@/helper/createGame";
 
-export default function createTournamentMatchupCreator(api: Api) {
+export type TrounamentMatchupCreator = ReturnType<
+  typeof createTournamentMatchupCreator
+>;
+
+export default function addTournamentMatchupCreator(
+  repositories: Repositories
+): Api {
+  const tournamentMatchupCreator = createTournamentMatchupCreator(repositories);
+  return {
+    ...repositories,
+    tournamentMatchupCreator: tournamentMatchupCreator
+  };
+}
+
+function createTournamentMatchupCreator(api: Repositories) {
   return function createMatchupCreator(tournament: ApiTournament) {
     const getPid = createGetPidForTournament(tournament);
     const getGid = createGetGidForTournament(tournament);

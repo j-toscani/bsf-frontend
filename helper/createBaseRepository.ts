@@ -1,7 +1,7 @@
 import { Context } from "@nuxt/types";
 import { Ressource, RessourceType } from "@/types/derivedTypes";
 
-export type Repository<T extends Ressource> = {
+export type BaseRepository<T extends Ressource> = {
   getAll(): Promise<RessourceType<T>[]>;
   getOne(query: string): Promise<RessourceType<T>>;
   create(payload: RessourceType<T>): Promise<RessourceType<T>>;
@@ -35,7 +35,7 @@ function createBaseRepository(ctx: Context) {
       delete(id: string): Promise<RessourceType<T>> {
         return ctx.$axios.$delete(`/${ressource}/${id}`);
       }
-    } as Repository<T>;
+    } as BaseRepository<T>;
   };
 }
 
