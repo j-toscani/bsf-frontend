@@ -4,21 +4,21 @@ interface ApiReference {
   ref: string;
 }
 
-export type Player = {
+export type ApiPlayer = {
   discord: boolean;
   telegram: boolean;
   mail: boolean;
-  participated_in: Tournament[];
+  participated_in: ApiTournament[];
   _id: string;
   gamertag: string;
   createdAt: Date;
   updatedAt: Date;
   __v: number;
-  performances: Performance[];
+  performances: ApiPerformance[];
   id: string;
 };
 
-export interface Tournament {
+export interface ApiTournament {
   _id: string;
   teamsize: string;
   published_at: Date;
@@ -32,7 +32,7 @@ export interface Tournament {
   id: string;
 }
 
-export interface Performance {
+export interface ApiPerformance {
   _id?: string;
   points: {
     _id?: string;
@@ -51,7 +51,7 @@ export interface Performance {
     discord: boolean;
     telegram: boolean;
     mail: boolean;
-    participated_in: [string];
+    participated_in: string[];
     _id?: string;
     gamertag: string;
     createdAt?: Date;
@@ -66,5 +66,5 @@ export interface Performance {
 
 export interface Team {
   name: string;
-  players: Player[];
+  players: ApiPlayer[];
 }

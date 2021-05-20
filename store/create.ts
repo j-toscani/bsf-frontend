@@ -2,11 +2,11 @@ import { GetterTree, ActionTree, MutationTree } from "vuex";
 import { RootState } from "~/store";
 
 import { TEAM_OPTIONS } from "@/helper/constants";
-import { Player, Team } from "@/types/types";
+import { ApiPlayer, Team } from "@/types/types";
 import { TeamSizeValue } from "@/types/derivedTypes";
 
 export const state = () => ({
-  roster: [] as Player[],
+  roster: [] as ApiPlayer[],
   name: "" as string,
   date: null as Date | null,
 
@@ -15,7 +15,7 @@ export const state = () => ({
   teamOptions: TEAM_OPTIONS,
 
   teamSize: 1 as TeamSizeValue,
-  availablePlayers: [] as Player[]
+  availablePlayers: [] as ApiPlayer[]
 });
 
 export type CreateTournamentState = ReturnType<typeof state>;
@@ -35,7 +35,7 @@ export const getters: GetterTree<CreateTournamentState, RootState> = {
   },
   remainingContestants(state) {
     return state.availablePlayers.filter(
-      (option: Player) => !state.roster.includes(option)
+      (option: ApiPlayer) => !state.roster.includes(option)
     );
   },
   allTeamsAreFilled(state) {
@@ -55,8 +55,9 @@ export const mutations: MutationTree<CreateTournamentState> = {
   SET_TEAMS: (state, teams: Team[]) => (state.teams = teams),
   SET_TEAM: (state, data: { teamIndex: number; team: Team }) =>
     state.teams.splice(data.teamIndex, 1, data.team),
-  ADD_TO_ROSTER: (state, contestant: Player) => state.roster.push(contestant),
-  ADD_TO_TEAM: (state, data: { teamIndex: number; contestant: Player }) =>
+  ADD_TO_ROSTER: (state, contestant: ApiPlayer) =>
+    state.roster.push(contestant),
+  ADD_TO_TEAM: (state, data: { teamIndex: number; contestant: ApiPlayer }) =>
     state.teams[data.teamIndex].players.push(data.contestant),
   REMOVE_FROM_ROSTER: (state, index: number) => state.roster.splice(index, 1)
 };
@@ -80,7 +81,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     const players = await this.$api.players.getAll();
     commit("SET_PLAYERS", players);
   },
-  addToPlayers({ commit }, contestant: Player) {
+  addToPlayers({ commit }, contestant: ApiPlayer) {
     commit("ADD_TO_PLAYERS", contestant);
   },
   deleteFromRoster({ commit, dispatch }, contestantIndex) {
@@ -93,7 +94,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     dispatch("handleTeamChange");
   },
   handleTeamChange({ state, dispatch }) {
-    state.roster.forEach((contestant: Player, index: number) =>
+    state.roster.forEach((contestant: ApiPlayer, index: number) =>
       dispatch("addToTeamByIndex", { contestant, index })
     );
   },
@@ -106,7 +107,7 @@ export const actions: ActionTree<CreateTournamentState, RootState> = {
     dispatch("setEmptyTeams");
     dispatch("handleTeamChange");
   },
-  addToTeam({ commit }, data: { teamIndex: number; contestant: Player }) {
+  addToTeam({ commit }, data: { teamIndex: number; contestant: ApiPlayer }) {
     commit("ADD_TO_TEAM", data);
   },
   setEmptyTeams({ commit, getters, state }) {
