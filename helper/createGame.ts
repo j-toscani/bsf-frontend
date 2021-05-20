@@ -12,8 +12,8 @@ export default function createGame(
     name_team_a: teamA.name,
     name_team_b: teamB.name,
     teams: {
-      team_a: teamA.players,
-      team_b: teamB.players
+      team_a: teamA.players.map(player => player.id),
+      team_b: teamB.players.map(player => player.id)
     },
     performances: []
   };
