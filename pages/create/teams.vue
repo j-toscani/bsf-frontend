@@ -34,9 +34,6 @@
     <CustomButton size="big" level="tertiary" @click="handleCreateTournament">
       Create Tournament
     </CustomButton>
-    <CustomButton size="big" level="tertiary" @click="handleCreateMatchups">
-      Create Matches for Tournament
-    </CustomButton>
   </section>
 </template>
 
@@ -101,14 +98,20 @@ export default Vue.extend({
         { games: (games as ApiGame[]).map((game) => game.id!) }
       );
     },
-    handleCreateTournament() {
-      this.$api.tournaments
-        .create(this.tournamentCreateData)
-        .then((tournament) => {
-          this.$store.dispatch("create/setTournamentId", tournament);
-          this.$toast.add("Tournament created");
-        })
-        .catch((error) => console.error(error));
+    async handleCreateTournament() {
+      try {
+        const tournament = await this.handleCreateTournamentEntry();
+        this.$store.dispatch("create/setTournamentId", tournament);
+        this.$toast.add("Tournament created");
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+
+      this.handleCreateMatchups();
+    },
+    handleCreateTournamentEntry() {
+      this.$api.tournaments.create(this.tournamentCreateData);
     },
     async handleCreateMatchups() {
       if (!this.matchUpCreator) {
