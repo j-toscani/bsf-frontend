@@ -21,7 +21,7 @@ export const state = () => ({
 export type CreateTournamentState = ReturnType<typeof state>;
 
 export const getters: GetterTree<CreateTournamentState, RootState> = {
-  hasMinAmmountOfPLAYERS(state) {
+  hasMinAmmountOfContestants(state) {
     return state.roster.length > 3;
   },
   numberOfTeams(state) {
