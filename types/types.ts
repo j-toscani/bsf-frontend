@@ -8,7 +8,7 @@ export type ApiPlayer = {
   discord: boolean;
   telegram: boolean;
   mail: boolean;
-  participated_in: ApiTournament[];
+  participated_in: ApiTournament[] | string;
   _id: string;
   gamertag: string;
   createdAt: Date;
@@ -33,26 +33,27 @@ export interface ApiTournament {
 }
 
 export interface ApiGame {
-  _id: string;
-  name: string;
+  _id?: string;
+  name?: string; // old
   name_team_one?: string; // old
   name_team_two?: string; // old
   published_at?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  __v: number;
-  tournament: ApiTournament;
-  team_performances: {
-    team_a: ApiPerformance[];
-    team_b: ApiPerformance[];
-    _id: string;
-    __v: number;
-    id: string;
+  __v?: number;
+  tournament: ApiTournament | string;
+  teams: {
+    team_a: ApiPlayer[] | string[];
+    team_b: ApiPlayer[] | string[];
+    _id?: string;
+    __v?: number;
+    id?: string;
   };
+  performances: ApiPerformance[] | string[];
   name_team_a: string;
   name_team_b: string;
   g_id: string;
-  id: string;
+  id?: string;
 }
 
 export interface ApiPerformance {
@@ -70,18 +71,7 @@ export interface ApiPerformance {
   createdAt?: Date;
   updatedAt?: Date;
   __v?: 1;
-  player: {
-    discord: boolean;
-    telegram: boolean;
-    mail: boolean;
-    participated_in: string[];
-    _id?: string;
-    gamertag: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    __v?: number;
-    id?: string;
-  };
+  player: ApiPlayer | string;
   p_id: string;
   game: string;
   id?: string;
