@@ -121,14 +121,20 @@ export default Vue.extend({
         const games = await Promise.all(matchUpCreationRequests);
 
         await this.updateTournamentsWithGameData(games);
-        this.$toast.remove(toastId);
-        this.$toast.add("Games created!");
-        this.$router.push("/");
+        this.feedbackTournamentCreationSuccess(toastId);
       } catch (error) {
         console.error(error);
-        this.$toast.remove(toastId);
-        this.$toast.add("Game creation unsuccessful!");
+        this.feedbackTournamentCreationfailure(toastId);
       }
+    },
+    feedbackTournamentCreationSuccess(toastId: number) {
+      this.$toast.remove(toastId);
+      this.$toast.add("Games created!");
+      this.$router.push("/");
+    },
+    feedbackTournamentCreationfailure(toastId: number) {
+      this.$toast.remove(toastId);
+      this.$toast.add("Game creation unsuccessful!");
     },
     handleTeamCountButtonClick() {
       this.$store.dispatch("create/toggleTeamCount");
