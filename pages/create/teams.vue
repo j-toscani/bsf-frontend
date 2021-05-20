@@ -123,6 +123,7 @@ export default Vue.extend({
         await this.updateTournamentsWithGameData(games);
         this.$toast.remove(toastId);
         this.$toast.add("Games created!");
+        this.$router.push("/");
       } catch (error) {
         console.error(error);
         this.$toast.remove(toastId);
