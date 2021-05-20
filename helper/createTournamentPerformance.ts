@@ -6,10 +6,10 @@ function createPlayerPerformance(
     playerId: string;
     tournamentId: string;
   },
-  ids: { p_id: string; g_id: string }
+  ids: { p_id: string; game_id: string }
 ) {
   const { playerId, tournamentId } = refs;
-  const { p_id, g_id } = ids;
+  const { p_id, game_id } = ids;
   const points: PerformancePoints = {
     goals: 0,
     points: 0,
@@ -22,12 +22,12 @@ function createPlayerPerformance(
     player: playerId,
     tournament: tournamentId,
     p_id,
-    g_id
+    game: game_id
   };
 }
 
 export default function createTournamentPerformance(tournament: ApiTournament) {
-  return (player: ApiPlayer, ids: { p_id: string; g_id: string }) => {
+  return (player: ApiPlayer, ids: { p_id: string; game_id: string }) => {
     const refs = { playerId: player.id, tournamentId: tournament.id };
     return createPlayerPerformance(refs, ids);
   };
