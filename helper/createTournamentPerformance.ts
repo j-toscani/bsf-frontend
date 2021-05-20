@@ -1,30 +1,34 @@
-type PerformancePoints = {
-  goals: number;
-  points: number;
-  assists: number;
-  saves: number;
-  shots: number;
-};
+import { ApiTournament, PerformancePoints, ApiPlayer } from "@/types/types";
+import createGetPidForTournament from "./createGetPidForTournament";
 
-class PlayerPerformance {
-  player: string;
-  tournament: string;
-  points: PerformancePoints;
-
-  constructor(
-    refs: { playerId: string; tournamentId: string },
-    points: PerformancePoints
-  ) {
-    const { playerId, tournamentId } = refs;
-    this.player = playerId;
-    this.tournament = tournamentId;
-    this.points = points;
-  }
+function createPlayerPerformance(
+  refs: {
+    playerId: string;
+    tournamentId: string;
+  },
+  ids: { p_id: string; g_id: string }
+) {
+  const { playerId, tournamentId } = refs;
+  const { p_id, g_id } = ids;
+  const points: PerformancePoints = {
+    goals: 0,
+    points: 0,
+    assists: 0,
+    saves: 0,
+    shots: 0
+  };
+  return {
+    points: points,
+    player: playerId,
+    tournament: tournamentId,
+    p_id,
+    g_id
+  };
 }
 
-export default function createTournamentPerformance(tournamentId: string) {
-  return (playerId: string, points: PerformancePoints) => {
-    const refs = { playerId, tournamentId };
-    return new PlayerPerformance(refs, points);
+export default function createTournamentPerformance(tournament: ApiTournament) {
+  return (player: ApiPlayer, ids: { p_id: string; g_id: string }) => {
+    const refs = { playerId: player.id, tournamentId: tournament.id };
+    return createPlayerPerformance(refs, ids);
   };
 }
