@@ -28,7 +28,7 @@ function createPlayerPerformance(
 
 export default function createTournamentPerformance(tournament: ApiTournament) {
   return (player: ApiPlayer, ids: { p_id: string; game_id: string }) => {
-    const refs = { playerId: player.id, tournamentId: tournament.id };
+    const refs = { playerId: player.id, tournamentId: tournament.id! };
     return createPlayerPerformance(refs, ids);
   };
 }

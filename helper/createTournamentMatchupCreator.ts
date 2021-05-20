@@ -1,5 +1,5 @@
 import { Api, Repositories } from "~/plugins/api";
-import { ApiTournament, Team } from "~/types/types";
+import { ApiTournament, Team, ApiGame } from "~/types/types";
 
 import createGetGidForTournament from "./createGetGidForTournament";
 import createGetPidForTournament from "./createGetPidForTournament";
@@ -22,33 +22,50 @@ export default function addTournamentMatchupCreator(
 
 function createTournamentMatchupCreator(api: Repositories) {
   return function createMatchupCreator(tournament: ApiTournament) {
+    if (!tournament.id) {
+      console.error("No tournamentId found!");
+      return;
+    }
+
+    // ToDo: Fix typeinterference problem with tournamentId and gameid!
     const getPid = createGetPidForTournament(tournament);
     const getGid = createGetGidForTournament(tournament);
     const createPlayerPerformance = createTournamentPerformance(tournament);
 
+    const tournamentId = tournament.id!;
+
     return async function createMatchup(teams: [Team, Team], matchNr: number) {
       const [teamA, teamB] = teams;
       const g_id = getGid(teamA.name, teamB.name);
-      const game = createGame({ g_id, tournamentId: tournament.id }, [
-        teamA,
-        teamB
-      ]);
+      const game = createGame({ g_id, tournamentId }, [teamA, teamB]);
 
-      const createdGame = await api.games.create(game);
+      let createdGame = null as null | ApiGame;
+
+      try {
+        createdGame = await api.games.create(game);
+      } catch (error) {
+        console.error(error);
+      }
+
+      if (!createdGame) {
+        return;
+      }
+
+      const gameId = createdGame.id!;
       const players = [...teamA.players, ...teamB.players];
 
       const performanceRequests = players.map(player => {
         const p_id = getPid(player.gamertag, matchNr);
         const performance = createPlayerPerformance(player, {
           p_id,
-          game_id: createdGame.id!
+          game_id: gameId
         });
         return api.performances.create(performance);
       });
 
       const performances = await Promise.all(performanceRequests);
       const performanceIds = performances.map(performance => performance.id!);
-      api.games.update(createdGame.id!, { performances: performanceIds });
+      return api.games.update(gameId, { performances: performanceIds });
     };
   };
 }
