@@ -6,12 +6,12 @@
       </nuxt-link>
     </div>
     <TournamentList> My running Tournaments </TournamentList>
-    <TournamentList :tournaments="runningTournaments">
+    <TournamentList :tournaments="tournaments">
       Running Tournaments
     </TournamentList>
-    <TournamentList :tournaments="finishedTournaments">
+    <!-- <TournamentList :tournaments="finishedTournaments">
       Past Tournaments
-    </TournamentList>
+    </TournamentList> -->
   </div>
 </template>
 
@@ -19,54 +19,30 @@
 import Vue from "vue";
 
 import TournamentList from "@/components/TournamentList.vue";
+import { ApiTournament } from "~/types/types";
 
 export default Vue.extend({
   components: {
     TournamentList,
   },
+  async asyncData({ store }) {
+    await store.dispatch("fetchTournaments");
+    return {
+      tournaments: store.state.tournaments,
+    };
+  },
   data() {
     return {
-      tournaments: [
-        {
-          name: "Awesome Tournament",
-          running: true,
-          id: 1,
-        },
-        {
-          name: "Awesome Tournament",
-          running: false,
-          id: 2,
-        },
-        {
-          name: "Awesome Tournament",
-          running: true,
-          id: 3,
-        },
-        {
-          name: "Awesome Tournament",
-          running: true,
-          id: 4,
-        },
-        {
-          name: "Awesome Tournament",
-          running: false,
-          id: 5,
-        },
-        {
-          name: "Awesome Tournament",
-          running: true,
-          id: 6,
-        },
-      ],
+      tournaments: [] as ApiTournament[],
     };
   },
   computed: {
-    runningTournaments(): any[] {
-      return this.tournaments.filter((tournament) => tournament.running);
-    },
-    finishedTournaments(): any[] {
-      return this.tournaments.filter((tournament) => !tournament.running);
-    },
+    // runningTournaments(): any[] {
+    //   return this.tournaments.filter((tournament) => tournament.running);
+    // },
+    // finishedTournaments(): any[] {
+    //   return this.tournaments.filter((tournament) => !tournament.running);
+    // },
   },
 });
 </script>
