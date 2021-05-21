@@ -1,6 +1,6 @@
 import { Context } from "@nuxt/types";
 import { Ressource } from "~/types/derivedTypes";
-import { CmsResultComponent } from "~/types/types";
+import { CmsComponent, CmsComponentResponse } from "~/types/types";
 import { BaseRepository } from "./createBaseRepository";
 import {
   createTournamentMatchupCreator,
@@ -13,9 +13,7 @@ export type Repositories = {
 
 export interface Api extends Repositories {
   tournamentMatchupCreator: TournamentMatchupCreator;
-  getCmsResultComponentConfigs: (
-    context: Context
-  ) => Promise<CmsResultComponent[]>;
+  getCmsComponentConfigs: () => Promise<CmsComponentResponse>;
 }
 
 export default function createExtendedApi(
@@ -23,13 +21,17 @@ export default function createExtendedApi(
   context: Context
 ): Api {
   const tournamentMatchupCreator = createTournamentMatchupCreator(repositories);
-  const getCmsResultComponentConfigs = () => {
-    return context.$axios.$get("/content-manager/components");
-  };
+  const getCmsComponentConfigs = createGetCmsComponentConfig(context);
 
   return {
     ...repositories,
     tournamentMatchupCreator,
-    getCmsResultComponentConfigs
+    getCmsComponentConfigs
+  };
+}
+
+function createGetCmsComponentConfig(context: Context) {
+  return () => {
+    return context.$axios.$get("/content-manager/components");
   };
 }
