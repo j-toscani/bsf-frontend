@@ -22,7 +22,7 @@
           </span>
           <ul>
             <li v-for="(performance, index) in game.performances" :key="index">
-              {{ performance.stats }}
+              {{ performance | getDspStats }}
             </li>
           </ul>
         </div>
@@ -35,6 +35,7 @@
 import Vue from "vue";
 import {
   ApiGame,
+  ApiPerformance,
   ApiPerformanceComponentName,
   ApiPlayer,
   ApiTournament,
@@ -61,9 +62,16 @@ export default Vue.extend({
       const tagsOfTeamMembers = value.map((player) => player.gamertag);
       return tagsOfTeamMembers.join(", ");
     },
-    getDspStats(value: ApiPlayer[]) {
-      const tagsOfTeamMembers = value.map((player) => player.gamertag);
-      return tagsOfTeamMembers.join(", ");
+    getDspStats(value: ApiPerformance<ApiPerformanceComponentName>) {
+      const { points, goals, assists, saves, shots } = value.stats[0];
+
+      return {
+        points,
+        goals,
+        assists,
+        saves,
+        shots,
+      };
     },
   },
   computed: {

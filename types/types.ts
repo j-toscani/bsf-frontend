@@ -50,7 +50,7 @@ export interface ApiGame<T extends ApiPerformanceComponentName | "api"> {
 export interface ApiPerformance<T extends ApiPerformanceComponentName | "api"> {
   _id?: string;
   stats: T extends ApiPerformanceComponentName
-    ? [ApiPerformanceStatistic<T>]
+    ? [PerformanceTypeMap[T]]
     : [any];
   createdAt?: Date;
   updatedAt?: Date;
@@ -83,6 +83,10 @@ export interface PerformancePoints
   saves: number;
   shots: number;
 }
+
+export type PerformanceTypeMap = {
+  "results.rocket-league": PerformancePoints;
+};
 
 export interface CmsComponent {
   uid: string;
