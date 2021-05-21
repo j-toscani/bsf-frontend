@@ -1,39 +1,38 @@
 <template>
   <div>
     <h1>{{ tournament.name }}</h1>
-    <h2>Contestants:</h2>
-    <ul class="has-list-style">
-      <li v-for="(contenstant, index) in contestants" :key="index">
-        {{ contenstant.gamertag }}
-      </li>
-    </ul>
+
     <h2>Matchups:</h2>
     <ul>
       <li v-for="(game, index) in games" :key="index">
         <div>
-          <span>
+          <h4>
             <span> {{ game.name_team_a }} </span> :
             <span> ({{ game.teams.team_a | getTeamMembers }}) </span>
-          </span>
-          <strong>vs</strong>
-          <span>
+
+            <strong>vs</strong>
+
             <span> {{ game.name_team_b }} </span> :
             <span>({{ game.teams.team_b | getTeamMembers }})</span>
-          </span>
-          <ul>
+          </h4>
+          <ul style="max-width: 100ch">
             <li
-              v-for="(performance, index) in getPerformanceIndicators(
-                game.performances
-              )"
+              v-for="(performance, index) in game.performances"
               :key="index"
+              style="display: flex"
             >
-              <span
-                v-for="(touple, index) in Object.entries(performance)"
-                :key="index"
-              >
-                <span>{{ touple[0] }}:</span>
-                <span> {{ touple[1] }}</span> --
-              </span>
+              <strong> {{ performance.player.gamertag }} </strong>
+              <div style="margin-left: auto">
+                <span
+                  v-for="(touple, index) in Object.entries(
+                    getPerformanceIndicators(performance)
+                  )"
+                  :key="index"
+                >
+                  <span>{{ touple[0] }}:</span>
+                  <span> {{ touple[1] }}</span> --
+                </span>
+              </div>
             </li>
           </ul>
         </div>
@@ -88,23 +87,24 @@ export default Vue.extend({
   },
   methods: {
     getPerformanceIndicators(
-      performances: ApiPerformance<ApiPerformanceComponentName>[]
-    ): Partial<PerformancePoints>[] {
-      return performances.map((performance) => {
-        const { points, goals, assists, saves, shots } = performance.stats[0];
+      performance: ApiPerformance<ApiPerformanceComponentName>
+    ): Partial<PerformancePoints> {
+      const { points, goals, assists, saves, shots } = performance.stats[0];
 
-        return {
-          points,
-          goals,
-          assists,
-          saves,
-          shots,
-        };
-      });
+      return {
+        points,
+        goals,
+        assists,
+        saves,
+        shots,
+      };
     },
   },
 });
 </script>
 
 <style>
+h4 {
+  display: inline-block;
+}
 </style>
