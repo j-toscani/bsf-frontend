@@ -128,7 +128,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$store.dispatch("create/setPlayers");
+    this.$store.dispatch("create/fetchPlayers");
   },
 });
 </script>
