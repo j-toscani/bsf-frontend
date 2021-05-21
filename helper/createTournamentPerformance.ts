@@ -1,4 +1,9 @@
-import { ApiTournament, PerformancePoints, ApiPlayer } from "@/types/types";
+import {
+  ApiTournament,
+  PerformancePoints,
+  ApiPlayer,
+  ApiPerformanceComponentName
+} from "@/types/types";
 
 function createRocketLeaguePerformance(
   refs: {
@@ -18,7 +23,7 @@ function createRocketLeaguePerformance(
     shots: 0
   };
   return {
-    stats: [points],
+    stats: [points] as [PerformancePoints],
 
     player: playerId,
     tournament: tournamentId,
@@ -28,7 +33,7 @@ function createRocketLeaguePerformance(
 }
 
 export default function createTournamentPerformance(
-  tournament: ApiTournament<"api">
+  tournament: ApiTournament<"api" | ApiPerformanceComponentName>
 ) {
   return (player: ApiPlayer, ids: { p_id: string; game_id: string }) => {
     const refs = { playerId: player.id, tournamentId: tournament.id! };

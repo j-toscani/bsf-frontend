@@ -1,4 +1,9 @@
-import { ApiTournament, Team, ApiGame } from "~/types/types";
+import {
+  ApiTournament,
+  Team,
+  ApiGame,
+  ApiPerformanceComponentName
+} from "~/types/types";
 
 import createGetGidForTournament from "./createGetGidForTournament";
 import createGetPidForTournament from "./createGetPidForTournament";
@@ -11,7 +16,9 @@ export type TournamentMatchupCreator = ReturnType<
 >;
 
 export function createTournamentMatchupCreator(api: Repositories) {
-  return function createMatchupCreator(tournament: ApiTournament) {
+  return function createMatchupCreator(
+    tournament: ApiTournament<ApiPerformanceComponentName>
+  ) {
     if (!tournament.id) {
       console.error("No tournamentId found!");
       return;
@@ -29,7 +36,9 @@ export function createTournamentMatchupCreator(api: Repositories) {
       const g_id = getGid(teamA.name, teamB.name);
       const game = createGame({ g_id, tournamentId }, [teamA, teamB]);
 
-      let createdGame = null as null | ApiGame;
+      let createdGame = null as null | ApiGame<
+        ApiPerformanceComponentName | "api"
+      >;
 
       try {
         createdGame = await api.games.create(game);

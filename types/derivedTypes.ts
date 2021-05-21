@@ -3,7 +3,8 @@ import {
   ApiTournament,
   ApiPlayer,
   ApiPerformance,
-  ApiGame
+  ApiGame,
+  ApiPerformanceComponentName
 } from "@/types/types";
 
 export type TeamSize = typeof TEAM_OPTIONS[number];
@@ -13,9 +14,9 @@ export type TeamSizeValue = typeof values[number];
 
 type RessourceTypeMap = {
   players: ApiPlayer;
-  tournaments: ApiTournament;
-  performances: ApiPerformance;
-  games: ApiGame;
+  tournaments: ApiTournament<ApiPerformanceComponentName | "api">;
+  performances: ApiPerformance<ApiPerformanceComponentName | "api">;
+  games: ApiGame<ApiPerformanceComponentName | "api">;
 };
 
 export type Ressource = typeof ENDPOINTS[number];

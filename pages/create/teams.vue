@@ -40,7 +40,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import { ApiGame, Team } from "@/types/types";
+import { ApiGame, ApiPerformanceComponentName, Team } from "@/types/types";
 
 import CustomSelect from "~/components/CustomSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
@@ -81,21 +81,22 @@ export default Vue.extend({
     getTeamTypeName(data: { name: string; value: number }) {
       return data.name;
     },
-    createMatchups(): Promise<ApiGame | undefined>[] {
+    createMatchups(): Promise<ApiGame<"api"> | undefined>[] {
       return this.tournamentMatchups.map(
         (matchup: [Team, Team], index: number) => {
           return this.matchUpCreator(matchup, index + 1);
         }
       );
     },
-    updateTournamentsWithGameData(games: (ApiGame | undefined)[]) {
-      games = games.filter((game) => game);
-
+    updateTournamentsWithGameData(
+      games: ApiGame<ApiPerformanceComponentName | "api">[]
+    ) {
+      const gameIds = games.map((game) => game.id) as string[];
       return this.$api.tournaments.update(
-        this.$store.state.create.tournamentId as string,
+        this.$store.state.create.tournamentId,
         // all games exist because of filter
         // ids exist as games come from backend
-        { games: (games as ApiGame[]).map((game) => game.id!) }
+        { games: gameIds }
       );
     },
     async handleCreateTournament() {
@@ -121,9 +122,12 @@ export default Vue.extend({
       const toastId = this.$toast.add("Games are being created!");
       const matchUpCreationRequests = this.createMatchups();
       try {
-        const games = await Promise.all(matchUpCreationRequests);
+        const games = (await Promise.all(
+          matchUpCreationRequests
+        )) as ApiGame<"api">[];
 
         await this.updateTournamentsWithGameData(games);
+
         this.feedbackTournamentCreationSuccess(toastId);
       } catch (error) {
         console.error(error);
