@@ -3,14 +3,14 @@ import { RootState } from "~/store";
 
 import { TEAM_OPTIONS } from "@/helper/constants";
 import { ApiPlayer, Team } from "@/types/types";
-import { TrounamentMatchupCreator } from "@/helper/createTournamentMatchupCreator";
+import { TournamentMatchupCreator } from "@/helper/createTournamentMatchupCreator";
 import { TeamSizeValue } from "@/types/derivedTypes";
 import teamSizeNumberToWord from "@/helper/teamSizeNumberToWord";
 import createMatchPairings from "@/helper/createMatchPairings";
 
 export const state = () => ({
   tournamentId: null,
-  matchupCreator: null as null | ReturnType<TrounamentMatchupCreator>,
+  matchupCreator: null as null | ReturnType<TournamentMatchupCreator>,
   roster: [] as ApiPlayer[],
   name: "" as string,
   date: null as Date | null,
