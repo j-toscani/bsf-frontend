@@ -19,30 +19,25 @@
 import Vue from "vue";
 
 import TournamentList from "@/components/TournamentList.vue";
-import { ApiTournament } from "~/types/types";
+import { ApiPerformanceComponentName, ApiTournament } from "~/types/types";
 
 export default Vue.extend({
   components: {
     TournamentList,
   },
   async asyncData({ store }) {
-    await store.dispatch("fetchTournaments");
+    await Promise.all([
+      store.dispatch("fetchTournaments"),
+      store.dispatch("fetchResultConfigs"),
+    ]);
     return {
       tournaments: store.state.tournaments,
     };
   },
   data() {
     return {
-      tournaments: [] as ApiTournament[],
+      tournaments: [] as ApiTournament<ApiPerformanceComponentName>[],
     };
-  },
-  computed: {
-    // runningTournaments(): any[] {
-    //   return this.tournaments.filter((tournament) => tournament.running);
-    // },
-    // finishedTournaments(): any[] {
-    //   return this.tournaments.filter((tournament) => !tournament.running);
-    // },
   },
 });
 </script>
