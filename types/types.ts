@@ -86,3 +86,5 @@ export type PerformancePoints = {
   saves: number;
   shots: number;
 };
+
+export interface CmsResultComponent {}

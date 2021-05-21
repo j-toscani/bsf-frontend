@@ -1,8 +1,9 @@
 import { GetterTree, ActionTree, MutationTree } from "vuex";
-import { ApiTournament } from "@/types/types";
+import { ApiTournament, CmsResultComponent } from "@/types/types";
 
 export const state = () => ({
-  tournaments: [] as ApiTournament[]
+  tournaments: [] as ApiTournament[],
+  resultTypes: [] as CmsResultComponent[]
 });
 
 export type RootState = ReturnType<typeof state>;
@@ -18,5 +19,8 @@ export const actions: ActionTree<RootState, RootState> = {
   async fetchTournaments({ commit }) {
     const tournaments = await this.$api.tournaments.getMany();
     commit("SET_TOURNAMENTS", tournaments);
+  },
+  async fetchResultTypes({ commit }) {
+    const allComponentTypes = this.$api;
   }
 };
