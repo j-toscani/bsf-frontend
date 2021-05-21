@@ -1,6 +1,8 @@
-import { ApiTournament } from "~/types/types";
+import { ApiPerformanceComponentName, ApiTournament } from "~/types/types";
 
-export default function createGetGidForTournament(tournament: ApiTournament) {
+export default function createGetGidForTournament(
+  tournament: ApiTournament<ApiPerformanceComponentName>
+) {
   return (teamNameA: string, teamNameB: string) => {
     const formattedNames = [teamNameA, teamNameB].map(trimAndFormat);
     const [formattedNameA, formattedNameB] = formattedNames;

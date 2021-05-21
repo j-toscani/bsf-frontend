@@ -1,6 +1,8 @@
-import { ApiTournament } from "~/types/types";
+import { ApiPerformanceComponentName, ApiTournament } from "~/types/types";
 
-export default function createGetPidForTournament(tournament: ApiTournament) {
+export default function createGetPidForTournament(
+  tournament: ApiTournament<ApiPerformanceComponentName>
+) {
   return (playerName: string, nthGame: number) => {
     const uuidElements = [
       playerName,
