@@ -51,7 +51,7 @@ export interface ApiPerformance<T extends ApiPerformanceComponentName | "api"> {
   _id?: string;
   stats: T extends ApiPerformanceComponentName
     ? [ApiPerformanceStatistic<T>]
-    : [];
+    : [any];
   createdAt?: Date;
   updatedAt?: Date;
   __v?: 1;
