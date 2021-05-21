@@ -1,24 +1,18 @@
-interface ApiReference {
-  _id: string;
-  kind: string;
-  ref: string;
-}
-
 export type ApiPlayer = {
   discord: boolean;
   telegram: boolean;
   mail: boolean;
-  participated_in: ApiTournament[] | string;
+  participated_in: ApiTournament<ApiPerformanceComponentName>[] | string;
   _id: string;
   gamertag: string;
   createdAt: Date;
   updatedAt: Date;
   __v: number;
-  performances: ApiPerformance[];
+  performances: ApiPerformance<ApiPerformanceComponentName>[];
   id: string;
 };
 
-export interface ApiTournament {
+export interface ApiTournament<T extends ApiPerformanceComponentName | "api"> {
   teamsize: "one" | "two" | "three";
   _id?: string;
   published_at?: Date;
@@ -27,18 +21,18 @@ export interface ApiTournament {
   createdAt?: Date;
   updatedAt: Date;
   __v?: number;
-  contestants: ApiPlayer[] | string[];
-  games: ApiGame[] | String[];
+  contestants: T extends "api" ? string[] : ApiPlayer[];
+  games: T extends ApiPerformanceComponentName ? ApiGame<T>[] : string[];
   id?: string;
 }
 
-export interface ApiGame {
+export interface ApiGame<T extends ApiPerformanceComponentName | "api"> {
   _id?: string;
   published_at?: Date;
   createdAt?: Date;
   updatedAt?: Date;
   __v?: number;
-  tournament: ApiTournament | string;
+  tournament: ApiTournament<T> | string;
   teams: {
     team_a: ApiPlayer[] | string[];
     team_b: ApiPlayer[] | string[];
@@ -46,25 +40,18 @@ export interface ApiGame {
     __v?: number;
     id?: string;
   };
-  performances: ApiPerformance[] | string[];
+  performances: T extends "api" ? string[] : ApiPerformance<T>[];
   name_team_a: string;
   name_team_b: string;
   g_id: string;
   id?: string;
 }
 
-export interface ApiPerformance {
+export interface ApiPerformance<T extends ApiPerformanceComponentName | "api"> {
   _id?: string;
-  points: {
-    _id?: string;
-    goals: number;
-    points: number;
-    assists: number;
-    saves: number;
-    shots: number;
-    __v?: number;
-    id?: string;
-  };
+  stats: T extends ApiPerformanceComponentName
+    ? [ApiPerformanceStatistic<T>]
+    : [];
   createdAt?: Date;
   updatedAt?: Date;
   __v?: 1;
@@ -79,12 +66,63 @@ export interface Team {
   players: ApiPlayer[];
 }
 
-export type PerformancePoints = {
+export type ApiPerformanceComponentName = "results.rocket-league";
+
+interface ApiPerformanceStatistic<T extends ApiPerformanceComponentName> {
+  __component: T;
+  _id?: string;
+  __v?: 0;
+  id?: string;
+}
+
+export interface PerformancePoints
+  extends ApiPerformanceStatistic<"results.rocket-league"> {
   goals: number;
   points: number;
   assists: number;
   saves: number;
   shots: number;
-};
+}
 
-export interface CmsResultComponent {}
+export interface CmsComponent {
+  uid: string;
+  isDisplayed: boolean;
+  apiID: string;
+  category: string;
+  info: {
+    name: string;
+    icon: string;
+    description: string;
+    label: string;
+  };
+  options: {
+    timestamps: boolean;
+  };
+  attributes: {
+    [key: string]: {
+      type: CmsComponentAttribute;
+    };
+  };
+}
+
+type CmsComponentAttribute =
+  | "string"
+  | "text"
+  | "richtext"
+  | "email"
+  | "password"
+  | "integer"
+  | "biginteger"
+  | "float"
+  | "decimal"
+  | "date"
+  | "time"
+  | "datetime"
+  | "boolean"
+  | "enumeration"
+  | "json"
+  | "uid";
+
+export type CmsComponentResponse = {
+  data: CmsComponent[];
+};
