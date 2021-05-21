@@ -20,6 +20,11 @@
             <span> {{ game.name_team_b }} </span> :
             <span>({{ game.teams.team_b | getTeamMembers }})</span>
           </span>
+          <ul>
+            <li v-for="(performance, index) in game.performances" :key="index">
+              {{ performance.stats }}
+            </li>
+          </ul>
         </div>
       </li>
     </ul>
@@ -28,7 +33,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ApiGame, ApiPlayer, ApiTournament } from "~/types/types";
+import {
+  ApiGame,
+  ApiPerformanceComponentName,
+  ApiPlayer,
+  ApiTournament,
+} from "~/types/types";
 export default Vue.extend({
   name: "Tournament",
   async asyncData({ $api, route }) {
@@ -40,7 +50,7 @@ export default Vue.extend({
     };
   },
   data(): {
-    tournament: ApiTournament | null;
+    tournament: ApiTournament<ApiPerformanceComponentName> | null;
   } {
     return {
       tournament: null,
@@ -51,15 +61,19 @@ export default Vue.extend({
       const tagsOfTeamMembers = value.map((player) => player.gamertag);
       return tagsOfTeamMembers.join(", ");
     },
+    getDspStats(value: ApiPlayer[]) {
+      const tagsOfTeamMembers = value.map((player) => player.gamertag);
+      return tagsOfTeamMembers.join(", ");
+    },
   },
   computed: {
     contestants(): ApiPlayer[] {
-      return this.tournament
-        ? (this.tournament.contestants as ApiPlayer[])
-        : [];
+      return this.tournament ? this.tournament.contestants : [];
     },
-    games(): ApiGame[] {
-      return this.tournament ? (this.tournament.games as ApiGame[]) : [];
+    games(): ApiGame<ApiPerformanceComponentName>[] {
+      return this.tournament
+        ? (this.tournament.games as ApiGame<ApiPerformanceComponentName>[])
+        : [];
     },
   },
 });
