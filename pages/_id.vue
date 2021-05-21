@@ -21,8 +21,19 @@
             <span>({{ game.teams.team_b | getTeamMembers }})</span>
           </span>
           <ul>
-            <li v-for="(performance, index) in game.performances" :key="index">
-              {{ performance | getDspStats }}
+            <li
+              v-for="(performance, index) in getPerformanceIndicators(
+                game.performances
+              )"
+              :key="index"
+            >
+              <span
+                v-for="(touple, index) in Object.entries(performance)"
+                :key="index"
+              >
+                <span>{{ touple[0] }}:</span>
+                <span> {{ touple[1] }}</span> --
+              </span>
             </li>
           </ul>
         </div>
@@ -39,6 +50,7 @@ import {
   ApiPerformanceComponentName,
   ApiPlayer,
   ApiTournament,
+  PerformancePoints,
 } from "~/types/types";
 export default Vue.extend({
   name: "Tournament",
@@ -62,18 +74,8 @@ export default Vue.extend({
       const tagsOfTeamMembers = value.map((player) => player.gamertag);
       return tagsOfTeamMembers.join(", ");
     },
-    getDspStats(value: ApiPerformance<ApiPerformanceComponentName>) {
-      const { points, goals, assists, saves, shots } = value.stats[0];
-
-      return {
-        points,
-        goals,
-        assists,
-        saves,
-        shots,
-      };
-    },
   },
+
   computed: {
     contestants(): ApiPlayer[] {
       return this.tournament ? this.tournament.contestants : [];
@@ -82,6 +84,23 @@ export default Vue.extend({
       return this.tournament
         ? (this.tournament.games as ApiGame<ApiPerformanceComponentName>[])
         : [];
+    },
+  },
+  methods: {
+    getPerformanceIndicators(
+      performances: ApiPerformance<ApiPerformanceComponentName>[]
+    ): Partial<PerformancePoints>[] {
+      return performances.map((performance) => {
+        const { points, goals, assists, saves, shots } = performance.stats[0];
+
+        return {
+          points,
+          goals,
+          assists,
+          saves,
+          shots,
+        };
+      });
     },
   },
 });
