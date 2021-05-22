@@ -19,7 +19,6 @@ import {
   ApiGameTeam,
   ApiPerformance,
   ApiPerformanceComponentName,
-  ApiPlayer,
 } from "~/types/types";
 
 export default Vue.extend({

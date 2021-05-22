@@ -10,7 +10,7 @@
         :game="game"
       >
         <template v-slot="{ performances }">
-          <PerformanceRocketLeage
+          <PerformanceRocketLeageForm
             v-for="(performance, index) of performances"
             :key="index"
             :performance="performance"
@@ -31,13 +31,13 @@ import {
 } from "~/types/types";
 
 import PerformanceTeamsWrapper from "@/components/PerformanceTeamsWrapper.vue";
-import PerformanceRocketLeage from "@/components/PerformanceRocketLeage.vue";
+import PerformanceRocketLeageForm from "@/components/PerformanceRocketLeageForm.vue";
 
 export default Vue.extend({
   name: "Tournament",
   components: {
     PerformanceTeamsWrapper,
-    PerformanceRocketLeage,
+    PerformanceRocketLeageForm,
   },
   async asyncData({ $api, route }) {
     const tournamentId = route.params.id;
