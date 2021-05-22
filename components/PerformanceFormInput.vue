@@ -28,6 +28,19 @@ export default Vue.extend({
       value: this.performanceData[1],
     };
   },
+  watch: {
+    value(newVal, oldVal) {
+      let emitValue = newVal;
+
+      if (this.inputType === "number") {
+        emitValue = emitValue === "" ? 0 : parseInt(emitValue);
+      }
+
+      if (newVal !== oldVal) {
+        this.$emit("input", [this.performanceKey, emitValue]);
+      }
+    },
+  },
   computed: {
     inputId(): string {
       return this.pId + "_" + this.performanceKey;
