@@ -1,5 +1,6 @@
 <template>
   <CustomInput
+    style="display: inline-block"
     :label="performanceKey"
     :id="inputId"
     v-model="value"
@@ -15,7 +16,6 @@ export default Vue.extend({
   components: { CustomInput },
   props: {
     performanceData: {
-      type: Object,
       required: true,
     } as PropOptions<[string, string | number | undefined]>,
     pId: {
@@ -25,7 +25,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      value: this.performanceData,
+      value: this.performanceData[1],
     };
   },
   computed: {

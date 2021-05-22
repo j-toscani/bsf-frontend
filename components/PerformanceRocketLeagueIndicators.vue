@@ -7,10 +7,10 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+
 export default Vue.extend({
   props: {
     performanceData: {
-      type: Object,
       required: true,
     } as PropOptions<[string, string | number | undefined]>,
   },
