@@ -9,12 +9,7 @@ export default function createGame(
   return {
     g_id,
     tournament: tournamentId,
-    name_team_a: teamA.name,
-    name_team_b: teamB.name,
-    teams: {
-      team_a: teamA.players.map(player => player.id),
-      team_b: teamB.players.map(player => player.id)
-    },
+    teams,
     performances: []
   };
 }
