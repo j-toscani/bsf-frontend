@@ -2,10 +2,11 @@
   <li>
     <strong> {{ performance.player.gamertag }} </strong>
     <div>
-      <span v-for="(touple, index) in performanceIndicatorTouples" :key="index">
-        <span>{{ touple[0] }}:</span>
-        <span> {{ touple[1] }}</span> --
-      </span>
+      <PerformanceRocketLeagueIndicators
+        v-for="(performanceData, index) in performanceIndicatorTouples"
+        :key="index"
+        :performanceData="performanceData"
+      />
     </div>
   </li>
 </template>
@@ -13,8 +14,10 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { ApiPerformance, PerformancePoints } from "~/types/types";
+import PerformanceRocketLeagueIndicators from "./PerformanceRocketLeagueIndicators.vue";
 
 export default Vue.extend({
+  components: { PerformanceRocketLeagueIndicators },
   props: {
     performance: {
       type: Object,
