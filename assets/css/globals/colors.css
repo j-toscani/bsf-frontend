@@ -1,5 +1,6 @@
 :root {
   --color-font: rgba(0, 0, 0, 0.8);
+  --color-font-rgb: 0, 0, 0, 0.8;
   --color-font-inverse: white;
 
   --color-100: #000b28;
