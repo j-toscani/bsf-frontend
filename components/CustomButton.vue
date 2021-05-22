@@ -29,6 +29,8 @@ button {
   border: none;
   border-radius: 0.25rem;
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
+
+  transition: opacity 0.3s ease-out;
 }
 
 .small {
@@ -42,7 +44,8 @@ button {
 }
 
 button:disabled {
-  opacity: 0.75;
+  opacity: 0.6;
+  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.25);
 }
 
 .primary {
