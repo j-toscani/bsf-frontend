@@ -1,9 +1,15 @@
 <template>
   <div class="layout__app-wrapper">
     <header class="container container-outer">
-      <nuxt-link to="/"> Home </nuxt-link>
+      <nav>
+        <nuxt-link to="/"> Home </nuxt-link>
+        <CustomButton @click="openOverlay"> Login </CustomButton>
+      </nav>
     </header>
     <Nuxt class="layout__container container container-outer" />
+    <div class="overlay-background" v-if="overlay" @click="closeOverlay">
+      <div class="overlay-content">Hello!</div>
+    </div>
     <footer></footer>
   </div>
 </template>
@@ -16,6 +22,19 @@ export default Vue.extend({
   name: "default",
   components: {
     CustomButton,
+  },
+  data() {
+    return {
+      overlay: false,
+    };
+  },
+  methods: {
+    openOverlay() {
+      this.overlay = true;
+    },
+    closeOverlay() {
+      this.overlay = false;
+    },
   },
 });
 </script>
