@@ -2,13 +2,7 @@
   <li>
     <div>
       <h4>
-        <span> {{ game.name_team_a }} </span> :
-        <span> ({{ game.teams.team_a | getTeamMembers }}) </span>
-
-        <strong>vs</strong>
-
-        <span> {{ game.name_team_b }} </span> :
-        <span>({{ game.teams.team_b | getTeamMembers }})</span>
+        {{ performanceHeadline }}
       </h4>
       <ul>
         <slot v-bind="{ performances }" />
@@ -22,6 +16,7 @@ import Vue, { PropOptions } from "vue";
 
 import {
   ApiGame,
+  ApiGameTeam,
   ApiPerformance,
   ApiPerformanceComponentName,
   ApiPlayer,
@@ -34,15 +29,27 @@ export default Vue.extend({
       required: true,
     } as PropOptions<ApiGame<ApiPerformanceComponentName>>,
   },
-  filters: {
-    getTeamMembers(value: ApiPlayer[]) {
-      const tagsOfTeamMembers = value.map((player) => player.gamertag);
-      return tagsOfTeamMembers.join(", ");
-    },
-  },
   computed: {
     performances(): ApiPerformance<ApiPerformanceComponentName>[] {
       return this.game.performances;
+    },
+    performanceHeadline(): string {
+      const teamData = this.getTeamData();
+      return teamData.map(this.createPerformanceHeadline).join(" vs ");
+    },
+  },
+  methods: {
+    getPlayerNames(team: ApiGameTeam<ApiPerformanceComponentName>) {
+      return team.players.map((player) => player.gamertag);
+    },
+    createPerformanceHeadline(team: { name: string; playerNames: string[] }) {
+      return `${team.name} (${team.playerNames.join(", ")})`;
+    },
+    getTeamData() {
+      return this.game.teams.map((team) => ({
+        name: team.name,
+        playerNames: this.getPlayerNames(team),
+      }));
     },
   },
 });

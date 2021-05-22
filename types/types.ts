@@ -26,8 +26,8 @@ export interface ApiTournament<T extends ApiPerformanceComponentName | "api"> {
   id?: string;
 }
 
-export type ApiGameTeam = {
-  players: ApiPlayer[] | string[];
+export type ApiGameTeam<T extends ApiPerformanceComponentName | "api"> = {
+  players: T extends ApiPerformanceComponentName ? ApiPlayer[] : string[];
   name: string;
   _id?: string;
   __v?: number;
@@ -41,7 +41,7 @@ export interface ApiGame<T extends ApiPerformanceComponentName | "api"> {
   updatedAt?: Date;
   __v?: number;
   tournament: ApiTournament<T> | string;
-  teams: ApiGameTeam[];
+  teams: ApiGameTeam<T>[];
   performances: T extends "api" ? string[] : ApiPerformance<T>[];
   g_id: string;
   id?: string;
