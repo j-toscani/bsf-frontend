@@ -6,20 +6,14 @@
     <input
       v-bind="$attrs"
       class="input__input"
-      :autocomplete="!hasOptions"
-      :vale="value"
-      @input="emitValue"
+      :value="value"
+      @input="handleInput"
     />
-    <datalist v-if="hasOptions" :id="$attrs.list">
-      <option v-for="(option, index) in options" :value="option" :key="index">
-        {{ option }}
-      </option>
-    </datalist>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
 
 export default Vue.extend({
   name: "CustomInput",
@@ -29,32 +23,29 @@ export default Vue.extend({
       type: String,
       required: true,
     },
-    options: {
-      type: Array,
-      default: () => [],
-    } as PropOptions<string[]>,
-  },
-  data(): {
-    value: string | number;
-  } {
-    return {
-      value: "",
-    };
-  },
-  computed: {
-    hasOptions(): boolean {
-      return this.options.length > 0;
+    value: {
+      type: [String, Number],
+      default: "",
     },
   },
   methods: {
-    emitValue(event: InputEvent) {
-      this.$emit("input", (event.target as HTMLInputElement).value);
+    handleInput(event: InputEvent) {
+      const value = (event.target as HTMLInputElement).value;
+      this.emitValue(value);
+    },
+    emitValue(value: string | number) {
+      this.$emit("input", value);
     },
   },
 });
 </script>
 
 <style scoped>
+.input__label {
+  margin-bottom: 0.5em;
+  display: block;
+}
+
 input:required ~ label::after {
   content: "*";
 }
