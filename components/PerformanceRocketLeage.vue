@@ -2,10 +2,12 @@
   <li>
     <strong> {{ performance.player.gamertag }} </strong>
     <div>
-      <PerformanceRocketLeagueIndicators
+      <component
         v-for="(performanceData, index) in performanceIndicatorTouples"
         :key="index"
         :performanceData="performanceData"
+        :pId="performance.id"
+        :is="userRights"
       />
     </div>
   </li>
@@ -14,17 +16,28 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { ApiPerformance, PerformancePoints } from "~/types/types";
-import PerformanceRocketLeagueIndicators from "./PerformanceRocketLeagueIndicators.vue";
 
 export default Vue.extend({
-  components: { PerformanceRocketLeagueIndicators },
+  components: {
+    readonly: () =>
+      import("@/components/PerformanceRocketLeagueIndicators.vue"),
+    readAndWrite: () => import("@/components/PerformanceFormInput.vue"),
+  },
   props: {
     performance: {
       type: Object,
       required: true,
     } as PropOptions<ApiPerformance<"results.rocket-league">>,
   },
+  data() {
+    return {
+      isOwn: true,
+    };
+  },
   computed: {
+    userRights(): string {
+      return this.isOwn ? "readAndWrite" : "readonly";
+    },
     performanceIndicatorTouples(): [string, number | string | undefined][] {
       const touples = Object.entries(this.performanceIndicators);
       const touplesWithoutPID = touples.filter((touple) => touple[0] !== "id");
