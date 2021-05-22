@@ -31,7 +31,11 @@ export default {
   modules: [
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+ 
+      '@nuxtjs/axios',
+      '@nuxtjs/auth-next'
+  
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
