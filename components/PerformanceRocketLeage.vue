@@ -26,7 +26,9 @@ export default Vue.extend({
   },
   computed: {
     performanceIndicatorTouples(): [string, number | string | undefined][] {
-      return Object.entries(this.performanceIndicators);
+      const touples = Object.entries(this.performanceIndicators);
+      const touplesWithoutPID = touples.filter((touple) => touple[0] !== "id");
+      return touplesWithoutPID;
     },
     performanceIndicators(): Partial<PerformancePoints> {
       const stats = this.performance.stats[0];
@@ -37,6 +39,7 @@ export default Vue.extend({
         assists: stats.assists,
         saves: stats.saves,
         shots: stats.shots,
+        id: this.performance.p_id,
       };
     },
   },
