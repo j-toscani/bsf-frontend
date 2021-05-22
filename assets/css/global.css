@@ -4,6 +4,13 @@
 @import "./globals/colors.css";
 @import "./globals/transitions.css";
 
+:root {
+  --z-index-low: 5;
+  --z-index-mid: 10;
+  --z-index-high: 20;
+  --z-index-max: 30;
+}
+
 html {
   font-family: Roboto-Slab;
   font-size: clamp(14px, 2.5vw 20px);
