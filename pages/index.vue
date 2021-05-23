@@ -26,10 +26,7 @@ export default Vue.extend({
     TournamentList,
   },
   async asyncData({ store }) {
-    await Promise.all([
-      store.dispatch("fetchTournaments"),
-      store.dispatch("fetchResultConfigs"),
-    ]);
+    await Promise.all([store.dispatch("fetchTournaments")]);
     return {
       tournaments: store.state.tournaments,
     };
