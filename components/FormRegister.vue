@@ -1,5 +1,6 @@
 <template>
-  <form id="register" @submit="handleSubmit">
+  <form id="register" @submit.prevent="handleSubmit">
+    <CustomInput type="text" label="Username" v-model="name" />
     <CustomInput type="email" label="Email" v-model="email" />
     <CustomInput type="password" label="Password" v-model="password" />
     <CustomInput
@@ -7,7 +8,7 @@
       label="Repeat Password"
       v-model="repeatPassword"
     />
-    <CustomButton form="login" type="submit" level="tertiary">
+    <CustomButton form="register" type="submit" level="tertiary">
       Register!
     </CustomButton>
   </form>
@@ -18,6 +19,12 @@ import Vue from "vue";
 import CustomInput from "./CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
 
+type RegistrationPayload = {
+  email: string;
+  username: string;
+  password: string;
+};
+
 export default Vue.extend({
   components: { CustomButton, CustomInput },
   data() {
@@ -25,6 +32,7 @@ export default Vue.extend({
       password: "",
       repeatPassword: "",
       email: "",
+      name: "",
     };
   },
   computed: {
@@ -35,15 +43,32 @@ export default Vue.extend({
   methods: {
     handleSubmit() {
       if (!this.passwordIsValid) {
-        this.$toast.add("Password is not valid");
+        this.$toast.add("Password is not valid.");
         return;
       }
+
       const payload = {
+        username: this.name,
         password: this.password,
         email: this.email,
       };
 
-      console.log(payload);
+      this.handleRegistration(payload);
+    },
+    handleRegistration(payload: RegistrationPayload) {
+      this.$axios
+        .$post("/auth/local/register", payload)
+        .then(() => this.handleRegistrationSuccess(payload))
+        .catch(() => this.handleRegistrationFail(payload));
+    },
+    handleRegistrationFail(payload: RegistrationPayload) {
+      this.$toast.add("An Error occuured...");
+    },
+    handleRegistrationSuccess(payload: RegistrationPayload) {
+      this.$toast.add("Registration successfull!");
+      this.$auth.loginWith("local", {
+        data: { identifier: payload.email, password: payload.password },
+      });
     },
   },
 });
