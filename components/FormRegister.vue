@@ -65,10 +65,12 @@ export default Vue.extend({
       this.$toast.add("An Error occuured...");
     },
     handleRegistrationSuccess(payload: RegistrationPayload) {
-      this.$toast.add("Registration successfull!");
-      this.$auth.loginWith("local", {
-        data: { identifier: payload.email, password: payload.password },
-      });
+      this.$toast.add(
+        "Registration successfull! Please confirm your email adress."
+      );
+      // this.$auth.loginWith("local", {
+      //   data: { identifier: payload.email, password: payload.password },
+      // });
     },
   },
 });
