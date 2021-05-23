@@ -1,13 +1,13 @@
 <template>
   <div class="overlay-wrapper">
-    <div class="overlay-background" @click="emitClose"></div>
+    <div class="overlay-background" @click="closeModal"></div>
     <div class="overlay-content">
       <slot />
       <CustomButton
         level="tertiary"
         size="small"
         class="close-button"
-        @click="emitClose"
+        @click="closeModal"
       >
         X
       </CustomButton>
@@ -21,8 +21,8 @@ import CustomButton from "./CustomButton.vue";
 export default Vue.extend({
   components: { CustomButton },
   methods: {
-    emitClose() {
-      this.$emit("close");
+    closeModal() {
+      this.$store.dispatch("setModalState", false);
     },
   },
 });
