@@ -21,24 +21,21 @@ interface ApiUserRole {
   id: string;
 }
 
-interface ApiUser<T extends ApiPerformanceComponentName | "api"> {
-  jwt: string;
-  user: {
-    confirmed: boolean;
-    blocked: boolean;
-    _id?: string;
-    username: string;
-    email: string;
-    provider: string;
-    createdAt?: Date;
-    updatedAt?: Date;
-    __v?: number;
-    role: ApiUserRole;
-    tournaments: T extends ApiPerformanceComponentName
-      ? ApiTournament<ApiPerformanceComponentName>
-      : string[];
-    id?: string;
-  };
+export interface ApiUser<T extends ApiPerformanceComponentName | "api"> {
+  confirmed: boolean;
+  blocked: boolean;
+  _id?: string;
+  username: string;
+  email: string;
+  provider: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  __v?: number;
+  role: ApiUserRole;
+  tournaments: T extends ApiPerformanceComponentName
+    ? ApiTournament<ApiPerformanceComponentName>
+    : string[];
+  id?: string;
 }
 
 export interface ApiTournament<T extends ApiPerformanceComponentName | "api"> {
