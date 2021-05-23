@@ -23,8 +23,17 @@ export default Vue.extend({
   },
   methods: {
     handleSubmit() {
-      const payload = { email: this.email, password: this.password };
-      console.log(payload);
+      const payload = { identifier: this.email, password: this.password };
+      this.$auth
+        .loginWith("local", { data: payload })
+        .then(() => this.handleLoginSuccess())
+        .catch(() => this.handleLoginFail());
+    },
+    handleLoginSuccess() {
+      this.$store.dispatch("setModalState", false);
+    },
+    handleLoginFail() {
+      this.$toast.add("Login was not successfull.");
     },
   },
 });
