@@ -32,10 +32,9 @@ export default {
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
- 
-      '@nuxtjs/axios',
-      '@nuxtjs/auth-next'
-  
+
+    "@nuxtjs/axios",
+    "@nuxtjs/auth-next"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -47,6 +46,26 @@ export default {
     publicRuntimeConfig: {
       axios: {
         browserBaseURL: process.env.BROWSER_BASE_URL
+      }
+    }
+  },
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: "token"
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: "user"
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: "/auth/local", method: "post" },
+          logout: false,
+          user: { url: "/users/me", method: "get" }
+        }
       }
     }
   },
