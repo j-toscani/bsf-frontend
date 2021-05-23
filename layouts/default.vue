@@ -6,7 +6,7 @@
     </header>
     <Nuxt class="layout__container container container-outer" />
     <transition name="fade">
-      <CustomPopupLogin @close="closeOverlay" v-show="overlay" />
+      <CustomPopupLogin v-show="overlayOpen" />
     </transition>
     <footer></footer>
   </div>
@@ -23,17 +23,17 @@ export default Vue.extend({
     CustomButton,
     CustomPopupLogin,
   },
-  data() {
-    return {
-      overlay: false,
-    };
+  computed: {
+    overlayOpen() {
+      return this.$store.state.modalOpen;
+    },
   },
   methods: {
     openOverlay() {
-      this.overlay = true;
+      this.$store.dispatch("setModalState", true);
     },
     closeOverlay() {
-      this.overlay = false;
+      this.$store.dispatch("setModalState", false);
     },
   },
 });
