@@ -29,11 +29,10 @@ export default Vue.extend({
       type: Object,
       required: true,
     } as PropOptions<ApiPerformance<"results.rocket-league">>,
-  },
-  data() {
-    return {
-      isOwn: true,
-    };
+    isOwn: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     userRights(): string {
