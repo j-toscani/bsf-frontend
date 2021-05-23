@@ -53,19 +53,20 @@ export default {
     strategies: {
       local: {
         token: {
-          property: "token"
+          property: "jwt"
           // required: true,
           // type: 'Bearer'
         },
         user: {
-          property: "user"
+          property: ""
           // autoFetch: true
         },
         endpoints: {
           login: { url: "/auth/local", method: "post" },
           logout: false,
           user: { url: "/users/me", method: "get" }
-        }
+        },
+        resetOnError: true
       }
     }
   },
