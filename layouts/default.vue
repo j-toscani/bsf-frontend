@@ -2,7 +2,14 @@
   <div class="layout__app-wrapper">
     <header class="container container-outer">
       <nuxt-link to="/"> Home </nuxt-link>
-      <CustomButton @click="openOverlay"> Login </CustomButton>
+      <CustomButton
+        @click="openOverlay"
+        v-if="!$auth.loggedIn"
+        :class="{ hidden: onLoginPage }"
+      >
+        Login
+      </CustomButton>
+      <nuxt-link v-else to="/me"> Hello, {{ $auth.user.username }}!</nuxt-link>
     </header>
     <Nuxt class="layout__container container container-outer" />
     <transition name="fade">
@@ -24,6 +31,9 @@ export default Vue.extend({
     CustomPopupLogin,
   },
   computed: {
+    onLoginPage() {
+      return this.$route.path.includes("login");
+    },
     overlayOpen() {
       return this.$store.state.modalOpen;
     },
@@ -43,6 +53,10 @@ export default Vue.extend({
 footer {
   height: 10rem;
   width: 100%;
+}
+
+.hidden {
+  visibility: hidden;
 }
 
 header {
