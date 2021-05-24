@@ -25,7 +25,15 @@ export default Vue.extend({
         email: this.email,
       };
 
-      console.log(payload);
+      this.$axios
+        .$post("/auth/forgot-password", payload)
+        .then(() =>
+          this.$toast.add("A password-reset Mail was sent to your inbox!")
+        )
+        .catch((error) => {
+          console.error(error);
+          this.$toast.add("Mail was not sent. Something went wrong.");
+        });
     },
   },
 });
