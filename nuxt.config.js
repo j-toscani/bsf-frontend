@@ -19,7 +19,11 @@ export default {
   css: ["~assets/css/global.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["~/plugins/toast.client.ts", "~/plugins/api.ts"],
+  plugins: [
+    "~/plugins/toast.client.ts",
+    "~/plugins/api.ts",
+    "~/plugins/authActions.ts"
+  ],
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
@@ -31,7 +35,10 @@ export default {
   modules: [
     "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    "@nuxtjs/pwa"
+    "@nuxtjs/pwa",
+
+    "@nuxtjs/axios",
+    "@nuxtjs/auth-next"
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -43,6 +50,27 @@ export default {
     publicRuntimeConfig: {
       axios: {
         browserBaseURL: process.env.BROWSER_BASE_URL
+      }
+    }
+  },
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: "jwt"
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: ""
+          // autoFetch: true
+        },
+        endpoints: {
+          login: { url: "/auth/local", method: "post" },
+          logout: false,
+          user: { url: "/users/me", method: "get" }
+        },
+        resetOnError: true
       }
     }
   },

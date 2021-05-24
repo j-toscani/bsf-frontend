@@ -7,7 +7,8 @@ import {
 
 export const state = () => ({
   tournaments: [] as ApiTournament<ApiPerformanceComponentName>[],
-  resultConfigs: [] as CmsComponent[]
+  resultConfigs: [] as CmsComponent[],
+  modalOpen: false as boolean
 });
 
 export type RootState = ReturnType<typeof state>;
@@ -15,6 +16,7 @@ export type RootState = ReturnType<typeof state>;
 export const getters: GetterTree<RootState, RootState> = {};
 
 export const mutations: MutationTree<RootState> = {
+  SET_MODAL_STATE: (state, modalState) => (state.modalOpen = modalState),
   SET_TOURNAMENTS: (
     state,
     tournaments: ApiTournament<ApiPerformanceComponentName>[]
@@ -23,6 +25,9 @@ export const mutations: MutationTree<RootState> = {
 };
 
 export const actions: ActionTree<RootState, RootState> = {
+  setModalState({ commit }, modalState: boolean) {
+    commit("SET_MODAL_STATE", modalState);
+  },
   async fetchTournaments({ commit }) {
     const tournaments = await this.$api.tournaments.getMany();
     commit("SET_TOURNAMENTS", tournaments);

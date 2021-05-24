@@ -6,11 +6,6 @@
       class="contestantslist__add-contestant"
       @submit.prevent="createNewContestant"
     >
-      <CustomInput
-        label="Create new Player"
-        v-model="newContestant"
-        id="newContestant"
-      />
       <CustomButton
         level="tertiary"
         type="submit"
