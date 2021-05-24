@@ -1,17 +1,17 @@
 import { Context } from "@nuxt/types";
 
-type RegistrationPayload = {
+export type RegistrationPayload = {
   email: string;
   username: string;
   password: string;
 };
 
-type LoginPayload = {
-  email: string;
+export type LoginPayload = {
+  identifier: string;
   password: string;
 };
 
-type PasswordResetPayload = {
+export type PasswordResetPayload = {
   code: string;
   password: string;
   passwordConfirmation: string;
