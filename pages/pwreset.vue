@@ -17,21 +17,46 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { PasswordResetPayload } from "~/helper/createAuthActions";
+
 export default Vue.extend({
   name: "PwReset",
-  data() {
+  asyncData() {
+    const { confirmation } = this.$route.query;
+    return {
+      code: confirmation,
+    };
+  },
+  data(): PasswordResetPayload {
     return {
       password: "",
-      repeatPassword: "",
+      code: "",
+      passwordConfirmation: "",
     };
   },
   computed: {
+    payload(): PasswordResetPayload {
+      return {
+        code: this.code,
+        password: this.password,
+        passwordConfirmation: this.passwordConfirmation,
+      };
+    },
     passwordIsValid() {
       return true;
     },
   },
   methods: {
-    handleSubmit() {},
+    handleSubmit() {
+      if (!this.code) {
+        return;
+      }
+
+      this.$authActions
+        .resetPassword(this.payload)
+        .then(() => this.$toast.add("Successs!"))
+        .catch(() => this.$toast.add("Failure!"));
+    },
   },
 });
 </script>
