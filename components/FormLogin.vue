@@ -12,6 +12,7 @@
 import Vue from "vue";
 import CustomInput from "./CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
+import { LoginPayload } from "~/helper/createAuthActions";
 
 export default Vue.extend({
   components: { CustomInput, CustomButton },
@@ -24,8 +25,11 @@ export default Vue.extend({
   methods: {
     handleSubmit() {
       const payload = { identifier: this.email, password: this.password };
-      this.$auth
-        .loginWith("local", { data: payload })
+      this.handleLogin(payload);
+    },
+    handleLogin(payload: LoginPayload) {
+      this.$authActions
+        .login(payload)
         .then(() => this.handleLoginSuccess())
         .catch(() => this.handleLoginFail());
     },

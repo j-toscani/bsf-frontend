@@ -18,12 +18,7 @@
 import Vue from "vue";
 import CustomInput from "./CustomInput.vue";
 import CustomButton from "@/components/CustomButton.vue";
-
-type RegistrationPayload = {
-  email: string;
-  username: string;
-  password: string;
-};
+import { RegistrationPayload } from "~/helper/createAuthActions";
 
 export default Vue.extend({
   components: { CustomButton, CustomInput },
@@ -57,8 +52,8 @@ export default Vue.extend({
       this.handleRegistration(this.payload);
     },
     handleRegistration(payload: RegistrationPayload) {
-      this.$axios
-        .$post("/auth/local/register", payload)
+      this.$authActions
+        .registerUser(payload)
         .then(() => this.handleRegistrationSuccess())
         .catch(() => this.handleRegistrationFail());
     },
@@ -69,9 +64,6 @@ export default Vue.extend({
       this.$toast.add(
         "Registration successfull! Please confirm your email adress."
       );
-      // this.$auth.loginWith("local", {
-      //   data: { identifier: payload.email, password: payload.password },
-      // });
     },
   },
 });
