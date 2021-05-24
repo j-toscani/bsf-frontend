@@ -1,6 +1,8 @@
 import { Plugin } from "@nuxt/types";
+import { createAuthActions, AuthActions } from "~/helper/createAuthActions";
 
 const authActionsActions: Plugin = (context, inject) => {
+  const authActions = createAuthActions(context);
   inject("authActions", authActions);
 };
 
