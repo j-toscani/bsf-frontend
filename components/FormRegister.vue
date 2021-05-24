@@ -39,6 +39,13 @@ export default Vue.extend({
     passwordIsValid(): boolean {
       return true;
     },
+    payload(): RegistrationPayload {
+      return {
+        username: this.name,
+        password: this.password,
+        email: this.email,
+      };
+    },
   },
   methods: {
     handleSubmit() {
@@ -47,24 +54,18 @@ export default Vue.extend({
         return;
       }
 
-      const payload = {
-        username: this.name,
-        password: this.password,
-        email: this.email,
-      };
-
-      this.handleRegistration(payload);
+      this.handleRegistration(this.payload);
     },
     handleRegistration(payload: RegistrationPayload) {
       this.$axios
         .$post("/auth/local/register", payload)
-        .then(() => this.handleRegistrationSuccess(payload))
-        .catch(() => this.handleRegistrationFail(payload));
+        .then(() => this.handleRegistrationSuccess())
+        .catch(() => this.handleRegistrationFail());
     },
-    handleRegistrationFail(payload: RegistrationPayload) {
+    handleRegistrationFail() {
       this.$toast.add("An Error occuured...");
     },
-    handleRegistrationSuccess(payload: RegistrationPayload) {
+    handleRegistrationSuccess() {
       this.$toast.add(
         "Registration successfull! Please confirm your email adress."
       );
