@@ -16,7 +16,7 @@ export type BaseRepository<T extends Ressource> = {
 function createBaseRepository(ctx: Context) {
   return <T extends Ressource>(ressource: T) => {
     ctx.$axios.setBaseURL(
-      process.env?.BROWSER_BASE_URL || "http://localhost:1337"
+      process?.env?.BROWSER_BASE_URL || "http://localhost:1337"
     );
     return {
       getMany(query?: string): Promise<RessourceType<T>[]> {
