@@ -44,7 +44,7 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     axios: {
-      baseURL: "http://localhost:1337" // Used as fallback if no runtime config is provided
+      baseURL: process.env.BROWSER_BASE_URL || "http://localhost:1337" // Used as fallback if no runtime config is provided
     },
 
     publicRuntimeConfig: {

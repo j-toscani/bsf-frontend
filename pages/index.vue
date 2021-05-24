@@ -33,9 +33,14 @@ export default Vue.extend({
     TournamentList,
   },
   async asyncData({ store }) {
-    await Promise.all([store.dispatch("fetchTournaments")]);
+    try {
+      await Promise.all([store.dispatch("fetchTournaments")]);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(store.state.tournaments);
     return {
-      tournaments: store.state.tournaments,
+      tournaments: store.state.tournaments || [],
     };
   },
   data() {

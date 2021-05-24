@@ -15,7 +15,9 @@ export type BaseRepository<T extends Ressource> = {
 // Based on https://blog.lichter.io/posts/nuxt-api-call-organization-and-decoupling/
 function createBaseRepository(ctx: Context) {
   return <T extends Ressource>(ressource: T) => {
-    ctx.$axios.setBaseURL("http://localhost:1337");
+    ctx.$axios.setBaseURL(
+      process.env?.BROWSER_BASE_URL || "http://localhost:1337"
+    );
     return {
       getMany(query?: string): Promise<RessourceType<T>[]> {
         const path = query ? `/${ressource}/${query}` : `/${ressource}`;
