@@ -16,7 +16,7 @@
     "nuxt": "^2.15.6"
   },
   "devDependencies": {
-    "@babel/core": "7.14.3",
+    "@babel/core": "7.15.4",
     "@babel/preset-env": "7.14.2",
     "@nuxt/types": "^2.15.6",
     "@nuxt/typescript-build": "^2.1.0"
